@@ -1,3 +1,6 @@
 <resources>
   <string name="app_name">ChatTembok</string>
+  <string name="login.user_name.hint">Username</string>
+  <string name="login.password.hint">Paswrod</string>
+  <string name="button.submit">Submit</string>
 </resources>

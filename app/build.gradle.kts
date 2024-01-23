@@ -6,8 +6,10 @@ val localProperty = Properties().apply {
 }
 
 plugins {
+  kotlin("kapt")
   id("com.android.application")
   id("org.jetbrains.kotlin.android")
+  id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -23,10 +25,14 @@ android {
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-    buildConfigField("String", "amityKey", localProperty.getProperty("amity.kunci"))
+    buildConfigField("String", "AMITY_KEY", localProperty.getProperty("amity.kunci"))
   }
 
   buildTypes {
+
+    debug {
+      resValue ("bool", "IS_HIDDEN_AMITY_LOG", "false")
+    }
 
     release {
       isMinifyEnabled = false
@@ -44,14 +50,28 @@ android {
     viewBinding = true
     buildConfig = true
   }
+
+  packaging {
+    resources {
+      excludes += "/META-INF/{AL2.0,LGPL2.1}"
+      excludes += "META-INF/INDEX.LIST"
+      excludes += "META-INF/io.netty.versions.properties"
+    }
+  }
 }
 
 dependencies {
   implementation("com.github.AmityCo.Amity-Social-Cloud-SDK-Android:amity-sdk:6.25.1")
 
-  implementation("androidx.core:core-ktx:1.12.0")
-  implementation("androidx.appcompat:appcompat:1.6.1")
-  implementation("com.google.android.material:material:1.11.0")
+  //Dagger hilt
+  implementation("com.google.dagger:hilt-android:2.48")
+  implementation("com.google.android.gms:play-services-location:21.0.1")
+  kapt("com.google.dagger:hilt-android-compiler:2.48")
+
+  implementation("androidx.core:core-ktx:1.8.0")
+  implementation ("androidx.fragment:fragment-ktx:1.5.6")
+  implementation("androidx.appcompat:appcompat:1.4.2")
+  implementation("com.google.android.material:material:1.6.1")
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.5")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
