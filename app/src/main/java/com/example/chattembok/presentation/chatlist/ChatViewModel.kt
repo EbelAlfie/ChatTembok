@@ -1,24 +1,15 @@
 package com.example.chattembok.presentation.chatlist
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amity.socialcloud.sdk.api.chat.channel.AmityChannelRepository
 import com.amity.socialcloud.sdk.api.core.AmityCoreClient
 import com.amity.socialcloud.sdk.api.core.user.AmityUserRepository
-import com.amity.socialcloud.sdk.model.chat.channel.AmityChannel
-import com.amity.socialcloud.sdk.model.core.tag.AmityTags
 import com.example.chattembok.backend.UserDataModel
 import com.example.chattembok.data.repository.chat.ChatRepository
-import com.example.chattembok.data.repository.user.UserRepository
 import com.example.chattembok.presentation.chatlist.base.AmityResult
-import com.example.chattembok.presentation.chatlist.model.ChatModel
 import com.example.chattembok.presentation.orderhistory.model.OrderModel
-import com.google.gson.JsonObject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(
@@ -52,23 +43,6 @@ class ChatViewModel @Inject constructor(
         }
         .subscribe()
     }
-  }
-
-  fun createChannel() {
-    channelRepository.createChannel(displayName = "Weekly promo")
-      .community()
-      .metadata(metadata = JsonObject()) // optional
-      .tags(tags = AmityTags(listOf("Promotion", "New Arrival"))) // optional
-      .isPublic(false)
-      .build()
-      .create()
-      .doOnSuccess { channel: AmityChannel ->
-        // AmityChannel
-      }
-      .doOnError {
-        // Exception
-      }
-      .subscribe()
   }
 
 }

@@ -63,7 +63,6 @@ android {
 
 dependencies {
   implementation("com.github.AmityCo.Amity-Social-Cloud-UIKit-Android:amity-uikit:3.15.0")
-  implementation("com.github.AmityCo.Amity-Social-Cloud-SDK-Android:amity-sdk:6.25.1")
 
   //MONGGO DB
   implementation ("androidx.room:room-runtime:2.5.1")
