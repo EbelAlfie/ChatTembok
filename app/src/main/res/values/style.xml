@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="Text_Priority">
+    <item name="android:textSize">@dimen/text_20</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="Text_Medium">
+    <item name="android:textSize">@dimen/text_15</item>
+  </style>
+
+</resources>

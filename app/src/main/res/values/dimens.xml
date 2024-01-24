@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <dimen name="none">0dp</dimen>
+  <dimen name="spacing_5">5dp</dimen>
   <dimen name="spacing_12">12dp</dimen>
+
+  <dimen name="text_20">20sp</dimen>
+  <dimen name="text_15">15sp</dimen>
+  <dimen name="text_10">10sp</dimen>
 </resources>

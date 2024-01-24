@@ -10,14 +10,15 @@ plugins {
   id("com.android.application")
   id("org.jetbrains.kotlin.android")
   id("com.google.dagger.hilt.android")
+  id("kotlin-parcelize")
 }
 
 android {
-  namespace = "com.example.chattembok"
+  namespace = "com.example.chatrawatinapp"
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.example.chattembok"
+    applicationId = "com.example.chatrawatinapp"
     minSdk = 21
     targetSdk = 34
     versionCode = 1
@@ -61,14 +62,19 @@ android {
 }
 
 dependencies {
+  implementation("com.github.AmityCo.Amity-Social-Cloud-UIKit-Android:amity-uikit:3.15.0")
   implementation("com.github.AmityCo.Amity-Social-Cloud-SDK-Android:amity-sdk:6.25.1")
+
+  //MONGGO DB
+  implementation ("androidx.room:room-runtime:2.5.1")
+  kapt ("androidx.room:room-compiler:2.5.1")
+  implementation ("androidx.room:room-ktx:2.5.1")
 
   //Dagger hilt
   implementation("com.google.dagger:hilt-android:2.48")
-  implementation("com.google.android.gms:play-services-location:21.0.1")
   kapt("com.google.dagger:hilt-android-compiler:2.48")
 
-  implementation("androidx.core:core-ktx:1.8.0")
+  implementation("androidx.core:core-ktx:1.6.0")
   implementation ("androidx.fragment:fragment-ktx:1.5.6")
   implementation("androidx.appcompat:appcompat:1.4.2")
   implementation("com.google.android.material:material:1.6.1")
