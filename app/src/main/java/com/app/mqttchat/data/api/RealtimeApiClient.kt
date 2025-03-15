@@ -1,9 +1,14 @@
 package com.app.mqttchat.data.api
 
+import com.app.mqttchat.data.model.general.ApiResult
+import com.google.gson.Gson
 import com.hivemq.client.internal.util.InetSocketAddressUtil
 import com.hivemq.client.mqtt.MqttClient
 import com.hivemq.client.mqtt.datatypes.MqttQos
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
+import com.hivemq.client.mqtt.mqtt5.message.connect.connack.Mqtt5ConnAck
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.future.await
 import java.util.UUID
 
 class RealtimeApiClient {
@@ -15,7 +20,8 @@ class RealtimeApiClient {
   private var client: Mqtt5Client? = null
   private val clientId: String = UUID.randomUUID().toString()
 
-  fun connect() {
+  fun connect() = flow<ApiResult<Mqtt5ConnAck>> {
+    emit(ApiResult.Loading)
     try {
       val clientBuilder = MqttClient.builder()
         .identifier(clientId)
@@ -24,10 +30,10 @@ class RealtimeApiClient {
       client = clientBuilder.useMqttVersion5().buildAsync().also { mqttClient ->
         println("VIS LOG connect")
         val connection = mqttClient.connect().await()
-        emit(ResponseResult.Success(connection))
+        emit(ApiResult.Success(connection))
       }
     } catch (e: Throwable) {
-      emit(ResponseResult.Error(e))
+      emit(ApiResult.Error(e))
     }
   }
 
