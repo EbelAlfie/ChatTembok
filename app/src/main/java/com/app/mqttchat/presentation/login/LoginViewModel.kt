@@ -8,16 +8,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 @HiltViewModel
 class LoginViewModel: ComposeViewModel<LoginUiState>() {
 
-  override fun <uiState> initialState(): UiState<uiState> {
+  override fun initialState(): UiState<LoginUiState> = UiState.Loaded(LoginUiState())
 
+  fun onNameChange(newName: String) {
+    updateState {
+      (this as? UiState.Loaded)?.copy(state.copy(username = newName)) ?: this
+    }
   }
 
-  fun onNameChange() {
-
-  }
-
-  fun onPasswordChange() {
-
+  fun onPasswordChange(value: String) {
+    updateState {
+      (this as? UiState.Loaded)?.copy(state.copy(password = value)) ?: this
+    }
   }
 
   fun login() {
