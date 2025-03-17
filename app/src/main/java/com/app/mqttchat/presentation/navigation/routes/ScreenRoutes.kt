@@ -9,9 +9,9 @@ sealed class ScreenRoutes(
   val navArguments: List<NamedNavArgument> = emptyList()
 ) {
 
-  data object LoginScreen: ScreenRoutes(route = "login")
+  data object LoginRoute: ScreenRoutes(route = "login")
 
-  data object ChatScreen: ScreenRoutes(
+  data object ChatRoute: ScreenRoutes(
     route = "chat_room",
     navArguments = listOf(navArgument("roomId") { type = NavType.StringType })
   ) {
