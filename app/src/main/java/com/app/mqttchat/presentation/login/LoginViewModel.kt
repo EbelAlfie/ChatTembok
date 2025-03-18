@@ -1,6 +1,7 @@
 package com.app.mqttchat.presentation.login
 
 import androidx.lifecycle.ViewModel
+import com.app.mqttchat.presentation.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,6 +13,9 @@ class LoginViewModel @Inject constructor(): ViewModel() {
   private val _loginState = MutableStateFlow(LoginUiState())
   val loginState = _loginState.asStateFlow()
 
+  private val _apiState = MutableStateFlow<UiState<LoginUiState>?>(null)
+  val apiState = _apiState.asStateFlow()
+
   fun onNameChange(newName: String) =
     _loginState.update { it.copy(username = newName) }
 
@@ -19,10 +23,20 @@ class LoginViewModel @Inject constructor(): ViewModel() {
     _loginState.update { it.copy(password = password) }
 
   fun login() {
-    validateInputs()
+    val loginData = _loginState.value
+
+    if (loginData.username.isBlank()) return
+    if (loginData.password.isBlank()) return
+
+    onLoginSuccess()
   }
 
-  private fun validateInputs() {
+  private fun onLoginFailed() {
 
   }
+
+  private fun onLoginSuccess() {
+    _apiState.value = UiState.Loaded(_loginState.value)
+  }
+
 }

@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 abstract class ComposeViewModel<uiState>: ViewModel() {
-  private val _uiState: MutableStateFlow<UiState<uiState>> by lazy { MutableStateFlow(initialState()) }
+  protected val _uiState: MutableStateFlow<uiState> by lazy { MutableStateFlow(initialState()) }
   val uiState = _uiState.asStateFlow()
 
-  abstract fun initialState(): UiState<uiState>
+  abstract fun initialState(): uiState
 
-  fun updateState(newState: UiState<uiState>.() -> UiState<uiState>) {
+  fun updateState(newState: uiState.() -> uiState) {
     _uiState.update { it.newState() }
   }
 

@@ -8,7 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ChatFooter() {
+fun ChatFooter(
+  onSend: () -> Unit
+) {
   Row(
     modifier = Modifier
       .padding(43.dp)
