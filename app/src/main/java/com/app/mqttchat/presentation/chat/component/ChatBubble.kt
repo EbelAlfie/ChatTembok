@@ -1,11 +1,12 @@
 package com.app.mqttchat.presentation.chat.component
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+
+enum class Sender {
+  ME,
+  OTHERS;
+}
 
 @Composable
-fun ChatList(
-  modifier: Modifier = Modifier
-) {
-
+fun ChatBubble() {
 }

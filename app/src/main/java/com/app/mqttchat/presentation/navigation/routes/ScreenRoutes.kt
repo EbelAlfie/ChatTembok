@@ -5,17 +5,26 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 sealed class ScreenRoutes(
-  val route: String,
+  private val baseRoute: String,
   val navArguments: List<NamedNavArgument> = emptyList()
 ) {
 
-  data object LoginRoute: ScreenRoutes(route = "login")
+  val route: String
+    get() {
+      val mandatoryArguments = navArguments.filter { it.argument.defaultValue == null }
+        .takeIf { it.isNotEmpty() }
+        ?.joinToString(separator = "/", prefix = "/") { "{${it.name}}" } ?: ""
+
+      val optionalArguments = navArguments.filter { it.argument.defaultValue != null }
+        .takeIf { it.isNotEmpty() }
+        ?.joinToString(separator = "&", prefix = "?") { "${it.name}={${it.name}}" } ?: ""
+      return "$baseRoute$mandatoryArguments$optionalArguments"
+    }
+
+  data object LoginRoute: ScreenRoutes(baseRoute = "login")
 
   data object ChatRoute: ScreenRoutes(
-    route = "chat_room",
+    baseRoute = "chat_room",
     navArguments = listOf(navArgument("roomId") { type = NavType.StringType })
-  ) {
-    fun createRoute() = route
-  }
-
+  )
 }

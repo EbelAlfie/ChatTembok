@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">MqttChat</string>
+  <string name="placeholder.text.name">Your Name</string>
+  <string name="placeholder.text.password">Your Password</string>
 </resources>

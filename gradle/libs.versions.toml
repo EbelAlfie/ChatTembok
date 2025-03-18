@@ -1,9 +1,9 @@
 [versions]
 activityCompose = "1.10.1"
-agp = "8.8.0"
+agp = "8.8.2"
 composeBom = "2025.03.00"
 hiltNavigationCompose = "1.2.0"
-kotlin = "1.9.24"
+kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -37,4 +37,5 @@ gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 dagger-hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 

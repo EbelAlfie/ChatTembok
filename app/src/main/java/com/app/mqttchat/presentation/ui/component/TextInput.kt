@@ -19,8 +19,10 @@ object CustomTextFieldDefault {
   val shape: Shape = RoundedCornerShape(20.dp)
   val colors: TextFieldColors
     @Composable get() = OutlinedTextFieldDefaults.colors(
-      unfocusedContainerColor = Color.Gray,
+      unfocusedBorderColor = Color.Gray,
+      focusedBorderColor = Color.Gray,
       unfocusedPlaceholderColor = Color.Gray,
+      focusedPlaceholderColor = Color.Gray,
     )
 }
 
@@ -28,14 +30,12 @@ object CustomTextFieldDefault {
 fun TextInput(
   value: String,
   onValueChange: (String) -> Unit,
-  placeholder: @Composable () -> Unit = {
-    Text(text = "Your name")
-  },
+  placeholder: String = "" ,
   ) {
   OutlinedTextField(
     value = value,
     onValueChange = onValueChange,
-    placeholder = placeholder,
+    placeholder = { Text(text = placeholder) },
     textStyle = ChatTextStyle,
     shape = CustomTextFieldDefault.shape,
     colors = CustomTextFieldDefault.colors

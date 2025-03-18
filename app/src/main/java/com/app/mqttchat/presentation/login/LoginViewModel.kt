@@ -1,29 +1,28 @@
 package com.app.mqttchat.presentation.login
 
 import androidx.lifecycle.ViewModel
-import com.app.mqttchat.presentation.common.ComposeViewModel
-import com.app.mqttchat.presentation.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel: ComposeViewModel<LoginUiState>() {
+class LoginViewModel @Inject constructor(): ViewModel() {
+  private val _loginState = MutableStateFlow(LoginUiState())
+  val loginState = _loginState.asStateFlow()
 
-  override fun initialState(): UiState<LoginUiState> = UiState.Loaded(LoginUiState())
+  fun onNameChange(newName: String) =
+    _loginState.update { it.copy(username = newName) }
 
-  fun onNameChange(newName: String) {
-    updateState {
-      (this as? UiState.Loaded)?.copy(state.copy(username = newName)) ?: this
-    }
-  }
-
-  fun onPasswordChange(value: String) {
-    updateState {
-      (this as? UiState.Loaded)?.copy(state.copy(password = value)) ?: this
-    }
-  }
+  fun onPasswordChange(password: String) =
+    _loginState.update { it.copy(password = password) }
 
   fun login() {
-
+    validateInputs()
   }
 
+  private fun validateInputs() {
+
+  }
 }

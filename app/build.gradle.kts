@@ -3,6 +3,7 @@ plugins {
   alias(libs.plugins.kotlin.android)
   id("com.google.dagger.hilt.android")
   id("kotlin-kapt")
+  alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -36,6 +37,10 @@ android {
   }
   kotlinOptions {
     jvmTarget = "11"
+  }
+  packaging {
+    resources.excludes.add("META-INF/INDEX.LIST")
+    resources.excludes.add("META-INF/io.netty.versions.properties")
   }
 }
 
