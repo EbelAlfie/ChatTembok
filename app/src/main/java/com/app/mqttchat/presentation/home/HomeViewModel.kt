@@ -9,5 +9,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
   private val applicationUseCase: ApplicationUseCase
 ): ViewModel() {
+  fun establishRealtimeConnection() {
+    applicationUseCase.establishMqttConnection()
+  }
 
 }

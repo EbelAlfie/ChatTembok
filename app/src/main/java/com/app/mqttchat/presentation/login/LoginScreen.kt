@@ -22,7 +22,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.app.mqttchat.R
+import com.app.mqttchat.domain.model.UserModel
 import com.app.mqttchat.presentation.common.UiState
+import com.app.mqttchat.presentation.common.UiState.Loaded
 import com.app.mqttchat.presentation.login.component.AppTitle
 import com.app.mqttchat.presentation.navigation.ScreenRoutes
 import com.app.mqttchat.presentation.ui.component.GeneralButton
@@ -73,6 +75,7 @@ fun LoginScreen(
   }
 
   LaunchedEffect(loginState) {
-    if (loginState is UiState.Loaded) navController.navigate(ScreenRoutes.ChatRoute)
+    if (loginState is UiState.Loaded)
+      navController.navigate(ScreenRoutes.HomeRoute.navigate((loginState as Loaded<UserModel>).data))
   }
 }

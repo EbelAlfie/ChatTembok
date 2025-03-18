@@ -5,6 +5,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.app.mqttchat.domain.model.UserModel
 import com.app.mqttchat.presentation.navigation.argument.UserData
+import com.app.mqttchat.presentation.navigation.argument.putArgument
 import com.app.mqttchat.presentation.navigation.argument.putParcelable
 
 sealed class ScreenRoutes(
@@ -29,9 +30,7 @@ sealed class ScreenRoutes(
     baseRoute = "chat_room",
     navArguments = listOf(navArgument("roomId") { type = NavType.StringType })
   ) {
-    fun navigate() {
-
-    }
+    fun navigate(roomId: String) = route.putArgument("roomId", roomId)
   }
 
   data object HomeRoute: ScreenRoutes(
