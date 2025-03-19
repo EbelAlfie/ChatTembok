@@ -3,16 +3,14 @@ package com.app.mqttchat.presentation.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.mqttchat.App
-import com.app.mqttchat.domain.model.MessageModel
+import com.app.mqttchat.domain.model.ChatMessageModel
 import com.app.mqttchat.domain.usecase.ChatUseCase
-import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,8 +21,8 @@ class ChatViewModel @AssistedInject constructor(
   @Assisted private val roomId: String,
   private val chatUseCase: ChatUseCase
 ): ViewModel() {
-  private val _chatState = MutableStateFlow<MutableList<MessageModel>>(mutableListOf())
-  val chatState: StateFlow<List<MessageModel>> = _chatState
+  private val _chatState = MutableStateFlow<MutableList<ChatMessageModel>>(mutableListOf())
+  val chatState: StateFlow<List<ChatMessageModel>> = _chatState
 
   fun loadMessages() {
 
@@ -32,7 +30,7 @@ class ChatViewModel @AssistedInject constructor(
 
   fun sendMessage(message: String) {
     val user = App.getUser() ?: return
-    val messageRequest = MessageModel(
+    val messageRequest = ChatMessageModel(
       user = user,
       text = message
     )

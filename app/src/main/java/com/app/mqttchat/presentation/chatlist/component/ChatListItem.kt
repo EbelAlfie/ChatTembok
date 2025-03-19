@@ -14,13 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.mqttchat.domain.model.ChatItem
+import com.app.mqttchat.domain.model.ChatRoomItem
 import com.app.mqttchat.presentation.chat.component.Avatar
 
 @Composable
 fun ChatListItem(
-  item: ChatItem,
-  onItemClick: (ChatItem) -> Unit
+  item: ChatRoomItem,
+  onItemClick: (ChatRoomItem) -> Unit
 ) {
   Row(
     modifier = Modifier
@@ -36,7 +36,7 @@ fun ChatListItem(
 }
 
 @Composable
-fun RowScope.ChatInfo(item: ChatItem) {
+fun RowScope.ChatInfo(item: ChatRoomItem) {
   Column(
     modifier = Modifier.weight(1f),
     verticalArrangement = Arrangement.spacedBy(10.dp)

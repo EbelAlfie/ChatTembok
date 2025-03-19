@@ -1,6 +1,6 @@
 package com.app.mqttchat.domain.model
 
-data class ChatItem (
+data class ChatRoomItem (
   val roomId: String = "",
   val title: String = "",
   val avatar: String = "",

@@ -8,13 +8,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.mqttchat.domain.model.MessageModel
+import com.app.mqttchat.domain.model.ChatMessageModel
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun MessageList(
   modifier: Modifier = Modifier,
-  messages: StateFlow<List<MessageModel>>
+  messages: StateFlow<List<ChatMessageModel>>
 ) {
   val messageList by messages.collectAsStateWithLifecycle()
   LazyColumn(

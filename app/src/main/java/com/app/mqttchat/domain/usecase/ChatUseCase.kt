@@ -1,10 +1,10 @@
 package com.app.mqttchat.domain.usecase
 
-import com.app.mqttchat.domain.model.MessageModel
+import com.app.mqttchat.domain.model.ChatMessageModel
 import kotlinx.coroutines.flow.Flow
 
 interface ChatUseCase {
-  fun sendMessage(chatRoomId: String, message: MessageModel)
+  fun sendMessage(chatRoomId: String, message: ChatMessageModel)
 
-  fun observeMessage(chatRoomId: String): Flow<MessageModel>
+  fun observeMessage(chatRoomId: String): Flow<ChatMessageModel>
 }

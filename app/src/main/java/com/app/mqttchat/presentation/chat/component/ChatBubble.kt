@@ -1,9 +1,7 @@
 package com.app.mqttchat.presentation.chat.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -12,10 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import com.app.mqttchat.domain.model.MessageModel
+import com.app.mqttchat.domain.model.ChatMessageModel
 
 @Composable
-fun ChatBubble(message: MessageModel) {
+fun ChatBubble(message: ChatMessageModel) {
   Column {
     Text(text = message.user.username)
     Card (

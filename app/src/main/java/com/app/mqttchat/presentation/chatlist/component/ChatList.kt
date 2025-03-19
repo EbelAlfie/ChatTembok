@@ -9,14 +9,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.app.mqttchat.domain.model.ChatItem
+import com.app.mqttchat.domain.model.ChatRoomItem
 import com.app.mqttchat.presentation.navigation.ScreenRoutes
 
 @Composable
 fun ChatList(
   navController: NavHostController
 ) {
-  val chatLists by remember { mutableStateOf(listOf(ChatItem(roomId = "1", title = "Liz", subtitle = "Hey..."))) }
+  val chatLists by remember { mutableStateOf(listOf(ChatRoomItem(roomId = "1", title = "Liz", subtitle = "Hey..."))) }
 
   LazyColumn(modifier = Modifier.fillMaxSize()) {
     items(chatLists) { item ->
