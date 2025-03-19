@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MqttChat"
 include(":app")
- 
+include(":Realtime")

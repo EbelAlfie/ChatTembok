@@ -1,4 +1,4 @@
-package com.app.mqttchat.data.model.general
+package com.app.mqttchat.data.api
 
 data class RealtimeEvent<eventModel>(
   val data: eventModel
