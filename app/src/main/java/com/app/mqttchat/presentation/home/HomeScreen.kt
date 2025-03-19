@@ -13,6 +13,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.app.mqttchat.presentation.chatlist.ChatListScreen
+import com.app.mqttchat.presentation.home.SubPage.ChatListPage
 import com.app.mqttchat.presentation.home.component.NavigationBar
 
 @Composable
@@ -37,7 +39,10 @@ fun HomeScreen(
     Column(
       modifier = Modifier.padding(it)
     ) {
-
+      when(subPages[selectedIndex]) {
+        is ChatListPage -> ChatListScreen(navController)
+        else -> {}
+      }
     }
   }
 }

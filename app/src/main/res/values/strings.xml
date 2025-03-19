@@ -3,4 +3,5 @@
   <string name="login">Login</string>
   <string name="placeholder.text.name">Your Name</string>
   <string name="placeholder.text.password">Your Password</string>
+  <string name="message.composer.hint">Type your message</string>
 </resources>

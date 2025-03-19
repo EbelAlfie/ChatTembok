@@ -37,7 +37,8 @@ fun AppRouter(
       route = ChatRoute.route,
       arguments = ChatRoute.navArguments
     ) {
-      ChatRoomScreen(navController = navController)
+      val roomId = it.arguments?.getString("roomId") ?: ""
+      ChatRoomScreen(roomId = roomId, navController = navController)
     }
   }
 }

@@ -50,8 +50,6 @@ class RealtimeApiClient @Inject constructor() {
     topic: String,
     message: String
   ) {
-    val gson = Gson()
-    val msg = gson.toJson(message)
     val qos = 1
     val retained = false
     println("VIS LOG PUBLISH")
@@ -61,7 +59,7 @@ class RealtimeApiClient @Inject constructor() {
           .publishWith()
           .topic(topic)
           .qos(MqttQos.AT_LEAST_ONCE)
-          .payload(msg.toByteArray())
+          .payload(message.toByteArray())
           .send()
       }
       println("VIS LOG MESSAGE PUBLISHED")

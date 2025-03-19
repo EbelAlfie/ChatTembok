@@ -1,9 +1,13 @@
 package com.app.mqttchat.presentation.login
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
+import com.app.mqttchat.App
 import com.app.mqttchat.domain.model.UserModel
 import com.app.mqttchat.presentation.common.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -38,10 +42,14 @@ class LoginViewModel @Inject constructor(): ViewModel() {
 
   private fun onLoginSuccess() {
     val userData = _loginState.value
-    _apiState.value = UiState.Loaded(UserModel(
+    val user = UserModel(
       id = userData.password,
       username = userData.username
-    ))
+    )
+
+    App.setUser(user)
+
+    _apiState.value = UiState.Loaded(user)
   }
 
 }
