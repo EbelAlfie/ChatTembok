@@ -1,8 +1,7 @@
 <resources>
-  <string name="app_name">Chat Rawat In-App</string>
-  <string name="login.user_name.hint">Username</string>
-  <string name="login.password.hint">Paswrod</string>
-  <string name="button.submit">Submit</string>
-  <string name="button.go_to_chat">Labrak!</string>
-  <string name="order_di_sini">ORDER DI SINI</string>
+  <string name="app_name">MqttChat</string>
+  <string name="login">Login</string>
+  <string name="placeholder.text.name">Your Name</string>
+  <string name="placeholder.text.password">Your Password</string>
+  <string name="message.composer.hint">Type your message</string>
 </resources>
