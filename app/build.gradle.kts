@@ -55,6 +55,7 @@ dependencies {
   implementation(libs.androidx.hilt.navigation.compose)
 
   implementation(libs.dagger.hilt)
+  implementation(project(":core"))
   kapt(libs.dagger.hilt.compiler)
 
   implementation(libs.gson)

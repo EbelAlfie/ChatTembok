@@ -1,4 +1,4 @@
-package com.app.mqttchat.data.model.general
+package com.app.core
 
 sealed interface ApiResult<out response> {
   data object Loading: ApiResult<Nothing>

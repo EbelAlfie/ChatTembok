@@ -1,4 +1,4 @@
-package com.app.mqttchat.data.api
+package com.app.realtime.api
 
 interface MessageAdapter<type> {
 
