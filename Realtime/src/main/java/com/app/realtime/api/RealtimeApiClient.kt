@@ -2,6 +2,7 @@ package com.app.realtime.api
 
 import com.app.core.ApiResult
 import com.app.realtime.config.ConnectionConfig
+import com.app.realtime.config.Qos
 import com.app.realtime.model.PublishRequest
 import com.app.realtime.model.SubscribeRequest
 import com.hivemq.client.internal.util.InetSocketAddressUtil
@@ -55,13 +56,13 @@ class RealtimeApiClient @Inject constructor() {
 
   fun publish(request: PublishRequest) {
     with (request) {
-      val qosValue = MqttQos.fromCode(qos.code()) ?: MqttQos.AT_MOST_ONCE
       try {
         client?.also {
           it.toAsync()
             .publishWith()
             .topic(topic)
-            .qos(qosValue)
+            .qos(qos.getQosCode())
+            .retain(retained)
             .payload(message.toByteArray())
             .send()
             .whenComplete { t, u ->
@@ -77,12 +78,11 @@ class RealtimeApiClient @Inject constructor() {
   fun subscribe(request: SubscribeRequest): Flow<String> {
     return flow {
       with (request) {
-        val qosValue = MqttQos.fromCode(qos.code()) ?: EXACTLY_ONCE
         try {
           client?.also {
             it.toAsync().subscribeWith()
               .topicFilter(topic)
-              .qos(qosValue)
+              .qos(qos.getQosCode())
               .callback {
                 println("VIS LOG Subscribe ${it.topic} ${it.payload}")
               }.send()
@@ -94,5 +94,7 @@ class RealtimeApiClient @Inject constructor() {
       }
     }
   }
+
+  private fun Qos.getQosCode() = MqttQos.fromCode(code()) ?: EXACTLY_ONCE
 
 }
