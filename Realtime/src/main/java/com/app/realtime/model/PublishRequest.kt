@@ -2,14 +2,14 @@ package com.app.realtime.model
 
 import com.app.realtime.config.Qos
 
-data class PublishRequest(
+data class PublishRequest<messageType>(
   val topic: String,
-  val message: String,
+  val message: messageType,
   val qos: Qos,
   val retained: Boolean = true
 ) {
   companion object {
-    fun defaultPubRequest(topic: String, message: String) =
+    fun <messageType>defaultPubRequest(topic: String, message: messageType) =
       PublishRequest(
         topic = topic,
         message = message,

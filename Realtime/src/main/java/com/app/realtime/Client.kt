@@ -3,24 +3,25 @@ package com.app.realtime
 import com.app.realtime.api.RealtimeApiClient
 import com.app.realtime.converter.MessageTypeConverter
 import com.app.realtime.model.PublishRequest
+import com.app.realtime.model.SubscribeRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 
 class RealtimeClient internal constructor(
   private val realtimeApiClient: RealtimeApiClient
 ) {
   private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-  fun connectUser() = scope.launch { realtimeApiClient.connect() }
+  fun connectUser() = realtimeApiClient.connect()
 
-  fun <msg>publishMessage(request: PublishRequest) {
-
+  fun <msg>publishMessage(request: PublishRequest<msg>) {
+    realtimeApiClient.publish(request)
   }
 
-  fun <msg>subscribeMessage() {
-
+  fun <msg>subscribeMessage(request: SubscribeRequest): Flow<msg> {
+    return realtimeApiClient.subscribe(request)
   }
 
   class Builder {

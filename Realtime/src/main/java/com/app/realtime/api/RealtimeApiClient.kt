@@ -54,7 +54,7 @@ class RealtimeApiClient @Inject constructor() {
       }
     }
 
-  fun publish(request: PublishRequest) {
+  fun publish(request: PublishRequest<String>) {
     with (request) {
       try {
         client?.also {
