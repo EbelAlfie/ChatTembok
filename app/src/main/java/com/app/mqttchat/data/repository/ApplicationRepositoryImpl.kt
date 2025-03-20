@@ -2,7 +2,7 @@ package com.app.mqttchat.data.repository
 
 import com.app.core.ApiResult
 import com.app.mqttchat.domain.repository.ApplicationRepository
-import com.app.realtime.RealtimeApiClient
+import com.app.realtime.api.RealtimeApiClient
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

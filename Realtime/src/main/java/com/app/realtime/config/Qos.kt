@@ -1,4 +1,4 @@
-package com.app.realtime
+package com.app.realtime.config
 
 enum class Qos {
   AT_MOST_ONCE,

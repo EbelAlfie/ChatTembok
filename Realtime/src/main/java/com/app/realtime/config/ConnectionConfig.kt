@@ -1,4 +1,4 @@
-package com.app.realtime.api
+package com.app.realtime.config
 
 import java.util.UUID
 
