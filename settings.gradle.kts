@@ -23,3 +23,4 @@ rootProject.name = "MqttChat"
 include(":app")
 include(":Realtime")
 include(":core")
+include(":ChuckerRealtime")

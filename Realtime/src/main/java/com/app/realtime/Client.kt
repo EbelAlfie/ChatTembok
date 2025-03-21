@@ -1,6 +1,7 @@
 package com.app.realtime
 
 import com.app.realtime.api.RealtimeApiClient
+import com.app.realtime.api.RealtimeInterceptor
 import com.app.realtime.converter.MessageTypeConverter
 import com.app.realtime.model.PublishRequest
 import com.app.realtime.model.SubscribeRequest
@@ -17,6 +18,7 @@ class RealtimeClient internal constructor(
   fun connectUser() = realtimeApiClient.connect()
 
   fun <msg>publishMessage(request: PublishRequest<msg>) {
+    val mqttMessage = ""
     realtimeApiClient.publish(request)
   }
 
@@ -26,9 +28,14 @@ class RealtimeClient internal constructor(
 
   class Builder {
     private val messageTypeConverter = mutableListOf<MessageTypeConverter<*>>()
+    private val interceptors = mutableListOf<RealtimeInterceptor>()
 
     fun <type> addMessageConverter(converter: MessageTypeConverter<type>) {
       messageTypeConverter.add(converter)
+    }
+
+    fun addMqttInterceptor(interceptor: RealtimeInterceptor) {
+      interceptors.add(interceptor)
     }
 
     fun build(client: RealtimeApiClient) = RealtimeClient(client)

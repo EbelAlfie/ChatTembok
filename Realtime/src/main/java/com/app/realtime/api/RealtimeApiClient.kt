@@ -3,13 +3,14 @@ package com.app.realtime.api
 import com.app.core.ApiResult
 import com.app.realtime.config.ConnectionConfig
 import com.app.realtime.config.Qos
-import com.app.realtime.model.PublishRequest
+import com.app.realtime.model.MqttMessage
 import com.app.realtime.model.SubscribeRequest
 import com.hivemq.client.internal.util.InetSocketAddressUtil
 import com.hivemq.client.mqtt.MqttClient
 import com.hivemq.client.mqtt.datatypes.MqttQos
 import com.hivemq.client.mqtt.datatypes.MqttQos.EXACTLY_ONCE
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
+import com.hivemq.client.mqtt.mqtt5.advanced.Mqtt5ClientAdvancedConfig
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -38,6 +39,7 @@ class RealtimeApiClient @Inject constructor() {
               trySend(ApiResult.Error(it.cause))
             }
             .useMqttVersion5()
+            .advancedConfig(Mqtt5ClientAdvancedConfig.builder().interceptors().build())
             .buildAsync()
 
           mqttClient.connect().whenComplete { t, u ->
@@ -54,8 +56,8 @@ class RealtimeApiClient @Inject constructor() {
       }
     }
 
-  fun publish(request: PublishRequest<String>) {
-    with (request) {
+  fun publish(mqttMessage: MqttMessage) {
+    with (mqttMessage) {
       try {
         client?.also {
           it.toAsync()
@@ -63,7 +65,7 @@ class RealtimeApiClient @Inject constructor() {
             .topic(topic)
             .qos(qos.getQosCode())
             .retain(retained)
-            .payload(message.toByteArray())
+            .payload(message)
             .send()
             .whenComplete { t, u ->
               println("VIS LOG publish $t error: $u")

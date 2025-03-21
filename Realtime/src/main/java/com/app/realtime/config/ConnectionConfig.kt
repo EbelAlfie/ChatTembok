@@ -1,11 +1,13 @@
 package com.app.realtime.config
 
+import com.app.realtime.api.RealtimeInterceptor
 import java.util.UUID
 
 data class ConnectionConfig(
   val host: String,
   val port: Int,
-  val clientId: String = UUID.randomUUID().toString()
+  val clientId: String = UUID.randomUUID().toString(),
+  val interceptor: List<RealtimeInterceptor> = emptyList()
 ) {
   fun getServerUri() = "tcp://$host:$port"
 
