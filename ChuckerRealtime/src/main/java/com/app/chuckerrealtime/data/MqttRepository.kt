@@ -1,6 +1,6 @@
 package com.app.chuckerrealtime.data
 
-interface MqttRepository {
+interface InterceptorRepository {
   fun storeMessage()
 
   fun getMessage()
