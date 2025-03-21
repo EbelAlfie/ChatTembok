@@ -3,7 +3,7 @@ package com.app.realtime.config
 import com.app.realtime.api.RealtimeInterceptor
 import java.util.UUID
 
-data class ConnectionConfig(
+data class ConnectionConfig internal constructor(
   val host: String,
   val port: Int,
   val clientId: String = UUID.randomUUID().toString(),

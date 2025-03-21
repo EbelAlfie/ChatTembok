@@ -4,10 +4,8 @@ import com.app.mqttchat.data.model.MessageEvent
 import com.app.mqttchat.domain.model.ChatMessageModel
 import com.app.mqttchat.domain.repository.ChatRepository
 import com.app.realtime.RealtimeClient
-import com.app.realtime.api.RealtimeApiClient
 import com.app.realtime.model.PublishRequest
 import com.app.realtime.model.SubscribeRequest
-import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
