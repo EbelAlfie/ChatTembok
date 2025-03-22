@@ -14,6 +14,8 @@ class RealtimeModule {
   fun provideRealtimeClient(
     client: MqttService
   ): RealtimeClient {
-    return RealtimeClient.Builder().build(client)
+    return RealtimeClient
+      .Builder()
+      .build(client)
   }
 }
