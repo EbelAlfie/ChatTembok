@@ -1,6 +1,5 @@
 package com.app.mqttchat.data.model
 
-import android.os.Message
 import com.app.mqttchat.domain.model.ChatMessageModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

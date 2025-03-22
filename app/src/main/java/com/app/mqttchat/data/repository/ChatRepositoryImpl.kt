@@ -15,12 +15,13 @@ class ChatRepositoryImpl @Inject constructor(
 ) : ChatRepository {
   override fun sendMessage(chatRoomId: String, message: ChatMessageModel) {
     realtimeApiClient.publishMessage(
-      PublishRequest.defaultPubRequest("chat/${chatRoomId}/send", message)
+      PublishRequest.defaultPubRequest("chat/${chatRoomId}/send", message),
+      ChatMessageModel::class.java
     )
   }
 
   override fun observeMessage(chatRoomId: String): Flow<ChatMessageModel> {
-    return realtimeApiClient.subscribeMessage(SubscribeRequest.defaultSubRequest("chat/${chatRoomId}/events"))
+    return realtimeApiClient.subscribeMessage(SubscribeRequest.defaultSubRequest("chat/${chatRoomId}/events"), MessageEvent::class.java)
       .map(MessageEvent::transform)
   }
 }

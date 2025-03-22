@@ -1,10 +1,11 @@
 package com.app.realtime.converter
 
+import com.app.realtime.model.PublishRequest
 import com.app.realtime.model.RealtimeMessage
 
-interface MessageTypeConverter<type> {
+interface MessageTypeConverter {
 
-  fun fromMessage(topic: String, message: type): RealtimeMessage
+  fun <type>toMessage(message: PublishRequest<type>, classType: Class<type>): RealtimeMessage
 
-  fun toMessage(topic: String, message: RealtimeMessage): type
+  fun <type>fromMessage(message: RealtimeMessage, classType: Class<type>): type?
 }

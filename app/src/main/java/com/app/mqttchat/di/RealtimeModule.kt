@@ -1,7 +1,7 @@
 package com.app.mqttchat.di
 
 import com.app.realtime.RealtimeClient
-import com.app.realtime.api.RealtimeApiAdapter
+import com.app.realtime.servicemodule.MqttService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 class RealtimeModule {
   @Provides
   fun provideRealtimeClient(
-    client: RealtimeApiAdapter
+    client: MqttService
   ): RealtimeClient {
     return RealtimeClient.Builder().build(client)
   }

@@ -1,6 +1,6 @@
 package com.app.chuckerrealtime
 
-import com.app.realtime.api.RealtimeInterceptor
+import com.app.realtime.interceptor.RealtimeInterceptor
 
 class MqttInterceptor: RealtimeInterceptor {
   override fun onConnect() {
