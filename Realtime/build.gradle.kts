@@ -39,6 +39,7 @@ dependencies {
   kapt(libs.dagger.hilt.compiler)
   implementation(libs.gson)
 
+  implementation(libs.hivemq.mqtt.client.websocket)
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
   implementation(libs.material)

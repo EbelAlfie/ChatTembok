@@ -2,6 +2,7 @@ package com.app.realtime.servicemodule
 
 import android.annotation.SuppressLint
 import com.app.core.ApiResult
+import com.app.realtime.Mapper
 import com.app.realtime.config.ConnectionConfig
 import com.app.realtime.config.Qos
 import com.app.realtime.interceptor.RealtimeInterceptor
@@ -18,6 +19,7 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5ClientConfig
 import com.hivemq.client.mqtt.mqtt5.advanced.interceptor.Mqtt5ClientInterceptors
 import com.hivemq.client.mqtt.mqtt5.advanced.interceptor.qos2.Mqtt5IncomingQos2Interceptor
 import com.hivemq.client.mqtt.mqtt5.advanced.interceptor.qos2.Mqtt5OutgoingQos2Interceptor
+import com.hivemq.client.mqtt.mqtt5.message.connect.Mqtt5Connect
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish
 import com.hivemq.client.mqtt.mqtt5.message.publish.pubcomp.Mqtt5PubComp
 import com.hivemq.client.mqtt.mqtt5.message.publish.pubcomp.Mqtt5PubCompBuilder
@@ -62,16 +64,16 @@ class MqttService @Inject constructor() : RealtimeService {
             mqttBuilder.advancedConfig().interceptors(interceptor)
           }
 
-          val mqttClient = mqttBuilder
-            .buildAsync()
+          val mqttClient = mqttBuilder.buildAsync()
 
-          mqttClient
-            .connectWith()
+          val connectPacketBuilder = Mqtt5Connect
+            .builder()
             .keepAlive(60)
-            .send()
+            .build()
+
+          mqttClient.connect(connectPacketBuilder)
             .whenComplete { t, u ->
-              println("VIS LOG CONNECT $t err: $u")
-              trySend(ApiResult.Success(true))
+
             }
 
           client = mqttClient
@@ -121,7 +123,7 @@ class MqttService @Inject constructor() : RealtimeService {
           ex.printStackTrace()
           println("VIS LOG ERRROR $ex")
         } finally {
-          awaitClose {  }
+          awaitClose { }
         }
       }
     }
@@ -153,14 +155,17 @@ class MqttService @Inject constructor() : RealtimeService {
 
   private fun adaptInterceptor(interceptor: RealtimeInterceptor?) =
     Mqtt5ClientInterceptors.builder()
-      .incomingQos1Interceptor { clientConfig, publish, pubAckBuilder ->  }
-      .incomingQos2Interceptor(object: Mqtt5IncomingQos2Interceptor {
+      .incomingQos1Interceptor { clientConfig, publish, pubAckBuilder ->
+        println("VIS LOG incomingQos1Interceptor ${publish} d ${pubAckBuilder}")
+        interceptor?.onPublish(Mapper.toPublish(publish))
+      }
+      .incomingQos2Interceptor(object : Mqtt5IncomingQos2Interceptor {
         override fun onPublish(
           clientConfig: Mqtt5ClientConfig,
           publish: Mqtt5Publish,
           pubRecBuilder: Mqtt5PubRecBuilder
         ) {
-          TODO("Not yet implemented")
+          println("VIS LOG incomingQos1Interceptor onPublish ${publish} d ${pubRecBuilder}")
         }
 
         override fun onPubRel(
@@ -168,19 +173,22 @@ class MqttService @Inject constructor() : RealtimeService {
           pubRel: Mqtt5PubRel,
           pubCompBuilder: Mqtt5PubCompBuilder
         ) {
-          TODO("Not yet implemented")
+          println("VIS LOG incomingQos1Interceptor onPubRel ${pubRel} d ${pubCompBuilder}")
         }
 
       })
-      .outgoingQos1Interceptor { clientConfig, publish, pubAck ->  }
-      .outgoingQos2Interceptor(object: Mqtt5OutgoingQos2Interceptor {
+      .outgoingQos1Interceptor { clientConfig, publish, pubAck ->
+        println("VIS LOG outgoingQos1Interceptor ${publish} d ${pubAck}")
+        interceptor?.onPublishAck(Mapper.toPublishAck(publish, pubAck))
+      }
+      .outgoingQos2Interceptor(object : Mqtt5OutgoingQos2Interceptor {
         override fun onPubRec(
           clientConfig: Mqtt5ClientConfig,
           publish: Mqtt5Publish,
           pubRec: Mqtt5PubRec,
           pubRelBuilder: Mqtt5PubRelBuilder
         ) {
-          TODO("Not yet implemented")
+          println("VIS LOG outgoingQos2Interceptor onPubRec ${publish} d ${pubRec} p ${pubRelBuilder}")
         }
 
         override fun onPubRecError(
@@ -188,7 +196,7 @@ class MqttService @Inject constructor() : RealtimeService {
           publish: Mqtt5Publish,
           pubRec: Mqtt5PubRec
         ) {
-          TODO("Not yet implemented")
+          println("VIS LOG outgoingQos2Interceptor onPubRecError ${publish} d ${pubRec}")
         }
 
         override fun onPubComp(
@@ -196,7 +204,7 @@ class MqttService @Inject constructor() : RealtimeService {
           pubRel: Mqtt5PubRel,
           pubComp: Mqtt5PubComp
         ) {
-          TODO("Not yet implemented")
+          println("VIS LOG outgoingQos2Interceptor onPubComp ${pubRel} d ${pubComp}")
         }
 
       })
