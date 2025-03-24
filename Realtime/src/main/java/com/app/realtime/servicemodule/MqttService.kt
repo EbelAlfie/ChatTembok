@@ -107,6 +107,7 @@ class MqttService(
           val subscribeMessage = Mqtt5Subscribe.builder()
             .topicFilter(topic)
             .qos(qos.getQosCode())
+            .retainAsPublished(retained)
             .build()
 
           client?.toAsync()?.subscribe(subscribeMessage) { mqttMessage ->

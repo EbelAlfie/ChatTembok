@@ -7,7 +7,7 @@ data class RealtimeMessage(
   val topic: String,
   val message: ByteBuffer?,
   val qos: Qos = Qos.AT_MOST_ONCE,
-  val retained: Boolean = true
+  val retained: Boolean = false
 ) {
 
   fun asString() {

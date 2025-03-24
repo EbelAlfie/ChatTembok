@@ -6,7 +6,7 @@ data class PublishRequest<messageType>(
   val topic: String,
   val message: messageType,
   val qos: Qos,
-  val retained: Boolean = true
+  val retained: Boolean = false
 ) {
   companion object {
     fun <messageType>defaultPubRequest(topic: String, message: messageType) =

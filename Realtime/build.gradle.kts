@@ -40,6 +40,7 @@ dependencies {
 
   implementation(libs.gson)
 
+  implementation(libs.okhttp)
   implementation(platform(libs.okhttp3.okhttp.bom))
 
   implementation(libs.hivemq.mqtt.client)
