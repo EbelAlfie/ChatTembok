@@ -2,7 +2,7 @@ package com.app.realtime.servicemodule
 
 import android.annotation.SuppressLint
 import com.app.core.ApiResult
-import com.app.realtime.Mapper
+import com.app.realtime.service.PacketMapper
 import com.app.realtime.config.ConnectionConfig
 import com.app.realtime.config.Qos
 import com.app.realtime.interceptor.RealtimeInterceptor
@@ -32,12 +32,11 @@ import com.hivemq.client.mqtt.mqtt5.message.unsubscribe.Mqtt5Unsubscribe
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.jvm.optionals.getOrNull
 
-@Singleton
-class MqttService @Inject constructor() : RealtimeService {
+class MqttService(
+  private val interceptors: MutableList<RealtimeInterceptor>
+) : RealtimeService {
   private var client: Mqtt5Client? = null
 
   @SuppressLint("CheckResult")
@@ -117,6 +116,8 @@ class MqttService @Inject constructor() : RealtimeService {
             it.toAsync().subscribe(subscribeMessage) { mqttMessage ->
               val realtimeMessage = toRealtimeMessage(mqttMessage)
               trySend(realtimeMessage)
+            }.whenComplete { subAck, error ->
+              interceptors.forEach { interceptor -> interceptor.onSubscribeAck(PacketMapper.onSubscribeAck(subAck)) }
             }
           }
         } catch (ex: Throwable) {
@@ -157,7 +158,7 @@ class MqttService @Inject constructor() : RealtimeService {
     Mqtt5ClientInterceptors.builder()
       .incomingQos1Interceptor { clientConfig, publish, pubAckBuilder ->
         println("VIS LOG incomingQos1Interceptor ${publish} d ${pubAckBuilder}")
-        interceptor?.onPublish(Mapper.toPublish(publish))
+        interceptor?.onPublish(PacketMapper.toPublish(publish))
       }
       .incomingQos2Interceptor(object : Mqtt5IncomingQos2Interceptor {
         override fun onPublish(
@@ -166,6 +167,7 @@ class MqttService @Inject constructor() : RealtimeService {
           pubRecBuilder: Mqtt5PubRecBuilder
         ) {
           println("VIS LOG incomingQos1Interceptor onPublish ${publish} d ${pubRecBuilder}")
+          interceptor?.onPublish(PacketMapper.toPublish(publish))
         }
 
         override fun onPubRel(
@@ -174,12 +176,13 @@ class MqttService @Inject constructor() : RealtimeService {
           pubCompBuilder: Mqtt5PubCompBuilder
         ) {
           println("VIS LOG incomingQos1Interceptor onPubRel ${pubRel} d ${pubCompBuilder}")
+          interceptor?.onPublishRel(PacketMapper.toPublishRel(pubRel))
         }
 
       })
       .outgoingQos1Interceptor { clientConfig, publish, pubAck ->
         println("VIS LOG outgoingQos1Interceptor ${publish} d ${pubAck}")
-        interceptor?.onPublishAck(Mapper.toPublishAck(publish, pubAck))
+        interceptor?.onPublishAck(PacketMapper.toPublishAck(publish, pubAck))
       }
       .outgoingQos2Interceptor(object : Mqtt5OutgoingQos2Interceptor {
         override fun onPubRec(
@@ -189,6 +192,7 @@ class MqttService @Inject constructor() : RealtimeService {
           pubRelBuilder: Mqtt5PubRelBuilder
         ) {
           println("VIS LOG outgoingQos2Interceptor onPubRec ${publish} d ${pubRec} p ${pubRelBuilder}")
+          interceptor?.onPublishRec(PacketMapper.toPublishRec(publish, pubRec))
         }
 
         override fun onPubRecError(
@@ -205,6 +209,7 @@ class MqttService @Inject constructor() : RealtimeService {
           pubComp: Mqtt5PubComp
         ) {
           println("VIS LOG outgoingQos2Interceptor onPubComp ${pubRel} d ${pubComp}")
+          interceptor?.onPublishComp(PacketMapper.toPublishComp(pubRel, pubComp))
         }
 
       })

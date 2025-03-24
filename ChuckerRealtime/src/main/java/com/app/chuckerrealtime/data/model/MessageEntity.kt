@@ -5,5 +5,6 @@ import java.nio.ByteBuffer
 
 @Entity
 data class MessageEntity(
+  val eventType: String,
   val payload: ByteBuffer
 )

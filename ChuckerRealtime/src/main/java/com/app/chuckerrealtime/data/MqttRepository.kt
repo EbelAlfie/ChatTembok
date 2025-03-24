@@ -1,7 +1,10 @@
 package com.app.chuckerrealtime.data
 
-interface InterceptorRepository {
-  fun storeMessage()
+import com.app.chuckerrealtime.data.model.MessageEntity
+import kotlinx.coroutines.flow.Flow
 
-  fun getMessage()
+interface InterceptorRepository {
+  fun storeMessage(newMessage: MessageEntity)
+
+  fun getMessage(): Flow<MessageEntity>
 }

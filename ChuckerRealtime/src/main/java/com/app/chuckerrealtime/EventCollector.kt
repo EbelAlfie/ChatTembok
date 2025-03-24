@@ -3,10 +3,9 @@ package com.app.chuckerrealtime
 import android.content.Context
 import com.app.chuckerrealtime.activity.NotifManager
 import com.app.chuckerrealtime.data.InterceptorRepository
+import com.app.chuckerrealtime.data.model.MessageEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 class EventCollector @Inject constructor(
@@ -16,8 +15,12 @@ class EventCollector @Inject constructor(
 
   private val notificationManager: NotifManager by lazy { NotifManager(context) }
 
-  private fun onMessageReceived() {
-    CoroutineScope(Dispatchers.IO).launch {
+  fun onNewMessage(newMessage: MessageEntity) {
+    repository.storeMessage(newMessage)
+  }
+
+  suspend fun observeNewMessage() {
+    repository.getMessage().collectLatest {
 
     }
   }
