@@ -19,7 +19,7 @@ fun MessageList(
 ) {
   val messageList by messages.collectAsStateWithLifecycle()
   LazyColumn(
-    modifier = modifier.padding(horizontal = 5.dp),
+    modifier = modifier.padding(horizontal = 8.dp),
     verticalArrangement = Arrangement.spacedBy(10.dp),
   ) {
     items(messageList, key = { it.id }) { ChatBubble(it) }

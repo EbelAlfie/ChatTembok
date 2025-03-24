@@ -28,7 +28,7 @@ fun ChatBubble(message: ChatMessageModel) {
     Column(
       modifier = if (isMine) Modifier.align(Alignment.CenterEnd) else Modifier.align(Alignment.CenterStart),
     ) {
-      Text(text = message.user.username)
+      Text(modifier = if (isMine) Modifier.align(Alignment.End) else Modifier.align(Alignment.Start), text = message.user.username)
       Card (
         modifier = Modifier
           .clip(CircleShape)
