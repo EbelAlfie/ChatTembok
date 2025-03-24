@@ -8,6 +8,7 @@ import com.app.realtime.config.Qos
 import com.app.realtime.interceptor.RealtimeInterceptor
 import com.app.realtime.model.RealtimeMessage
 import com.app.realtime.model.SubscribeRequest
+import com.app.realtime.model.UninitializedClientException
 import com.app.realtime.service.RealtimeService
 import com.hivemq.client.internal.util.InetSocketAddressUtil
 import com.hivemq.client.mqtt.MqttClient
@@ -48,14 +49,6 @@ class MqttService(
           val mqttBuilder = MqttClient.builder()
             .identifier(clientId)
             .serverAddress(InetSocketAddressUtil.create(host, port))
-            .addConnectedListener {
-              println("VIS LOG on connect $it")
-              trySend(ApiResult.Success(true))
-            }
-            .addDisconnectedListener {
-              println("VIS LOG on disconnect ${it.cause}")
-              trySend(ApiResult.Error(it.cause))
-            }
             .useMqttVersion5()
 
           interceptors.forEach {
@@ -72,7 +65,8 @@ class MqttService(
 
           mqttClient.connect(connectPacketBuilder)
             .whenComplete { t, u ->
-
+              if (t != null) trySend(ApiResult.Success(true))
+              if (u != null) trySend(ApiResult.Error(u.initCause(u.cause)))
             }
 
           client = mqttClient
@@ -88,15 +82,16 @@ class MqttService(
   override fun publish(message: RealtimeMessage) {
     with(message) {
       try {
-        client?.also {
-          val publishMessage = Mqtt5Publish.builder()
-            .topic(topic)
-            .qos(qos.getQosCode())
-            .retain(retained)
-            .payload(this.message)
-            .build()
-          it.toAsync().publish(publishMessage)
-        }
+        if (client == null) throw UninitializedClientException()
+
+        val publishMessage = Mqtt5Publish.builder()
+          .topic(topic)
+          .qos(qos.getQosCode())
+          .retain(retained)
+          .payload(this.message)
+          .build()
+
+        client?.toAsync()?.publish(publishMessage)
       } catch (e: Throwable) {
         println("VIS LOG ERROR PUBLISH $e")
       }
@@ -107,17 +102,23 @@ class MqttService(
     return callbackFlow {
       with(request) {
         try {
-          client?.also {
-            val subscribeMessage = Mqtt5Subscribe.builder()
-              .topicFilter(topic)
-              .qos(qos.getQosCode())
-              .build()
+          if (client == null) throw UninitializedClientException()
 
-            it.toAsync().subscribe(subscribeMessage) { mqttMessage ->
-              val realtimeMessage = toRealtimeMessage(mqttMessage)
-              trySend(realtimeMessage)
-            }.whenComplete { subAck, error ->
-              interceptors.forEach { interceptor -> interceptor.onSubscribeAck(PacketMapper.onSubscribeAck(subAck)) }
+          val subscribeMessage = Mqtt5Subscribe.builder()
+            .topicFilter(topic)
+            .qos(qos.getQosCode())
+            .build()
+
+          client?.toAsync()?.subscribe(subscribeMessage) { mqttMessage ->
+            val realtimeMessage = toRealtimeMessage(mqttMessage)
+            trySend(realtimeMessage)
+          }?.whenComplete { subAck, error ->
+            interceptors.forEach { interceptor ->
+              interceptor.onSubscribeAck(
+                PacketMapper.onSubscribeAck(
+                  subAck
+                )
+              )
             }
           }
         } catch (ex: Throwable) {

@@ -22,7 +22,9 @@ class RealtimeClient internal constructor(
   fun connectUser() = mqttServiceClient.connect(ConnectionConfig.defaultConfig())
 
   fun <msgType> publishMessage(request: PublishRequest<msgType>, type: Class<msgType>) {
+    println("VIS LOG to messasge")
     val realtimeMessage = converter.toMessage(message = request, classType = type)
+    println("VIS LOG to realtime $realtimeMessage")
     mqttServiceClient.publish(realtimeMessage)
   }
 
@@ -46,8 +48,6 @@ class RealtimeClient internal constructor(
       interceptors.add(interceptor)
     }
 
-    fun build() = RealtimeClient(
-      MqttService(interceptors)
-    )
+    fun build() = RealtimeClient(MqttService(interceptors))
   }
 }
