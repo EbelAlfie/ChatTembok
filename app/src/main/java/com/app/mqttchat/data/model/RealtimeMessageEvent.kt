@@ -7,20 +7,20 @@ import com.google.gson.annotations.SerializedName
 data class RealtimeMessageEvent(
   @Expose
   @SerializedName("messageId")
-  val id: String,
+  val id: String?,
   @Expose
   @SerializedName("user")
-  val user: UserResponse,
+  val user: UserResponse?,
   @Expose
   @SerializedName("text")
-  val text: String
+  val text: String?
 ) {
   companion object {
     fun transform(event: RealtimeMessageEvent): ChatMessageModel {
       return ChatMessageModel(
-        id = event.id,
+        id = event.id ?: "",
         user = UserResponse.transform(event.user),
-        text = event.text
+        text = event.text ?: ""
       )
     }
   }

@@ -1,5 +1,6 @@
 package com.app.mqttchat.domain
 
+import com.app.core.ApiResult
 import com.app.mqttchat.domain.model.ChatMessageModel
 import com.app.mqttchat.domain.repository.ChatRepository
 import com.app.mqttchat.domain.usecase.ChatUseCase
@@ -14,7 +15,7 @@ class ChatUseCaseImpl @Inject constructor(
     chatRepository.sendMessage(chatRoomId, messageRequest)
   }
 
-  override fun observeMessage(chatRoomId: String): Flow<ChatMessageModel> {
+  override fun observeMessage(chatRoomId: String): Flow<ApiResult<ChatMessageModel>> {
     return chatRepository.observeMessage(chatRoomId)
   }
 }

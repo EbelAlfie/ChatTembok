@@ -14,10 +14,10 @@ data class UserResponse(
 ) {
   companion object {
 
-    fun transform(response: UserResponse): UserModel {
+    fun transform(response: UserResponse?): UserModel {
       return UserModel(
-        id = response.id,
-        username = response.username
+        id = response?.id ?: "",
+        username = response?.username ?: ""
       )
     }
 
