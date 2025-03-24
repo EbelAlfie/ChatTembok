@@ -10,7 +10,8 @@ class ChatUseCaseImpl @Inject constructor(
   private val chatRepository: ChatRepository
 ): ChatUseCase {
   override fun sendMessage(chatRoomId: String, message: ChatMessageModel) {
-    chatRepository.sendMessage(chatRoomId, message)
+    val messageRequest = ChatMessageModel.toMessageRequest(message)
+    chatRepository.sendMessage(chatRoomId, messageRequest)
   }
 
   override fun observeMessage(chatRoomId: String): Flow<ChatMessageModel> {

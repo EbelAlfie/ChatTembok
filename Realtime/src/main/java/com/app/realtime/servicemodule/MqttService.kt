@@ -80,8 +80,8 @@ class MqttService(
     }
 
   override fun publish(message: RealtimeMessage) {
-    with(message) {
-      try {
+    try {
+      with(message) {
         if (client == null) throw UninitializedClientException()
 
         val publishMessage = Mqtt5Publish.builder()
@@ -92,9 +92,9 @@ class MqttService(
           .build()
 
         client?.toAsync()?.publish(publishMessage)
-      } catch (e: Throwable) {
-        println("VIS LOG ERROR PUBLISH $e")
       }
+    } catch (e: Throwable) {
+      println("VIS LOG ERROR PUBLISH $e")
     }
   }
 
@@ -114,11 +114,7 @@ class MqttService(
             trySend(realtimeMessage)
           }?.whenComplete { subAck, error ->
             interceptors.forEach { interceptor ->
-              interceptor.onSubscribeAck(
-                PacketMapper.onSubscribeAck(
-                  subAck
-                )
-              )
+              interceptor.onSubscribeAck(PacketMapper.onSubscribeAck(subAck))
             }
           }
         } catch (ex: Throwable) {

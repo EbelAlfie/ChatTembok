@@ -1,5 +1,6 @@
 package com.app.mqttchat.presentation.chat
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -36,7 +37,7 @@ fun ChatRoomScreen(
     },
     content = {
       MessageList(
-        modifier = Modifier.padding(it),
+        modifier = Modifier.fillMaxSize().padding(it),
         messages = viewModel.chatState
       )
     }

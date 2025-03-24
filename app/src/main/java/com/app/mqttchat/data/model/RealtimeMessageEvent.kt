@@ -4,9 +4,9 @@ import com.app.mqttchat.domain.model.ChatMessageModel
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class MessageEvent(
+data class RealtimeMessageEvent(
   @Expose
-  @SerializedName("id")
+  @SerializedName("messageId")
   val id: String,
   @Expose
   @SerializedName("user")
@@ -16,7 +16,7 @@ data class MessageEvent(
   val text: String
 ) {
   companion object {
-    fun transform(event: MessageEvent): ChatMessageModel {
+    fun transform(event: RealtimeMessageEvent): ChatMessageModel {
       return ChatMessageModel(
         id = event.id,
         user = UserResponse.transform(event.user),

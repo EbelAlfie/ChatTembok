@@ -21,7 +21,7 @@ class ChatViewModel @AssistedInject constructor(
   @Assisted private val roomId: String,
   private val chatUseCase: ChatUseCase
 ): ViewModel() {
-  private val _chatState = MutableStateFlow<MutableList<ChatMessageModel>>(mutableListOf())
+  private val _chatState = MutableStateFlow<List<ChatMessageModel>>(emptyList())
   val chatState: StateFlow<List<ChatMessageModel>> = _chatState
 
   fun loadMessages() {
@@ -29,18 +29,20 @@ class ChatViewModel @AssistedInject constructor(
   }
 
   fun sendMessage(message: String) {
-    val user = App.getUser() ?: return
-    val messageRequest = ChatMessageModel(
-      user = user,
-      text = message
-    )
-    chatUseCase.sendMessage(roomId, messageRequest)
+    viewModelScope.launch {
+      val user = App.getUser() ?: return@launch
+      val messageRequest = ChatMessageModel(
+        user = user,
+        text = message
+      )
+      chatUseCase.sendMessage(roomId, messageRequest)
+    }
   }
 
   fun observeMessages() {
     viewModelScope.launch {
       chatUseCase.observeMessage(roomId).collectLatest { newMessage ->
-        _chatState.update { it.apply { add(newMessage) } }
+        _chatState.update { (it + newMessage).distinctBy { message -> message.id } }
       }
     }
   }

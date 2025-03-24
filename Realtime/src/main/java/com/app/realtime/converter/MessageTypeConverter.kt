@@ -4,8 +4,9 @@ import com.app.realtime.model.PublishRequest
 import com.app.realtime.model.RealtimeMessage
 
 interface MessageTypeConverter {
+  val contentType: String
 
   fun <type>toMessage(message: PublishRequest<type>, classType: Class<type>): RealtimeMessage
 
-  fun <type>fromMessage(message: RealtimeMessage, classType: Class<type>): type?
+  fun <type>fromMessage(message: RealtimeMessage, classType: Class<type>): type
 }
