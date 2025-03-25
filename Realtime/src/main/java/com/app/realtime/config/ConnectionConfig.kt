@@ -5,10 +5,10 @@ import java.util.UUID
 data class ConnectionConfig internal constructor(
   val scheme: String,
   val host: String,
-  val port: Int,
+  val port: Int?,
   val clientId: String = UUID.randomUUID().toString(),
 ) {
-  fun getServerUri() = "$scheme://$host:$port"
+  fun getServerUri() = "$scheme://$host" + if (port != null) ":$port" else ""
 
   companion object {
     fun defaultMqttConfig() = ConnectionConfig(
@@ -16,11 +16,11 @@ data class ConnectionConfig internal constructor(
       port = 1883,
       scheme = "tcp"
     )
-
+    
     fun defaultWsConfig() = ConnectionConfig(
-      host = "10.4.77.103",
-      port = 8003,
-      scheme = "ws"
+      host = "gtw32lpt-8003.asse.devtunnels.ms",
+      port = null,
+      scheme = "wss"
     )
   }
 }

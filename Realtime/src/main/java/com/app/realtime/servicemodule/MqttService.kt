@@ -48,7 +48,7 @@ class MqttService(
         with(config) {
           val mqttBuilder = MqttClient.builder()
             .identifier(clientId)
-            .serverAddress(InetSocketAddressUtil.create(host, port))
+            .serverAddress(InetSocketAddressUtil.create(host, port ?: 0))
             .useMqttVersion5()
 
           interceptors.forEach {
