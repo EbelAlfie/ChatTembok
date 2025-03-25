@@ -11,6 +11,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,11 +30,13 @@ fun ChatBubble(message: ChatMessageModel) {
       modifier = if (isMine) Modifier.align(Alignment.CenterEnd) else Modifier.align(Alignment.CenterStart),
       verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-      Text(modifier = if (isMine) Modifier.align(Alignment.End) else Modifier.align(Alignment.Start), text = message.user.username)
+      val alignmentModifier = remember { if (isMine) Modifier.align(Alignment.End) else Modifier.align(Alignment.Start) }
+      Text(modifier =  alignmentModifier, text = message.user.username)
       Card (
         modifier = Modifier
           .clip(CircleShape)
-          .background(if (isMine) Light_Blue else Color.LightGray, CircleShape),
+          .background(if (isMine) Light_Blue else Color.LightGray, CircleShape)
+          .then(alignmentModifier),
         shape = CircleShape,
         colors = CardDefaults.cardColors(containerColor = if (isMine) Light_Blue else Color.LightGray),
         elevation = CardDefaults.elevatedCardElevation()

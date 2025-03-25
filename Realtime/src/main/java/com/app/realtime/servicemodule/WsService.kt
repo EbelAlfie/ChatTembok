@@ -21,7 +21,7 @@ import java.nio.ByteBuffer
 import java.util.UUID
 import java.util.concurrent.TimeUnit.SECONDS
 
-class WsService(): RealtimeService {
+class WsService: RealtimeService {
   private var client: WebSocket? = null
   private val sessionId: String = UUID.randomUUID().toString()
   private val _messageEvent = MutableSharedFlow<RealtimeMessage>(replay = 1)

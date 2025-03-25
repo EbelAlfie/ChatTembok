@@ -18,7 +18,7 @@ class RealtimeClient internal constructor(
 ) {
   private val converter: MessageTypeConverter = GsonConverter()
 
-  fun connectUser(config: ConnectionConfig?) = service.connect(config ?: connectionConfig)
+  fun connectUser(config: ConnectionConfig? = null) = service.connect(config ?: connectionConfig)
 
   fun <msgType> publishMessage(request: PublishRequest<msgType>, type: Class<msgType>) {
     val realtimeMessage = converter.toMessage(message = request, classType = type)
@@ -34,7 +34,7 @@ class RealtimeClient internal constructor(
     private val messageTypeConverter = mutableListOf<MessageTypeConverter>()
     private val interceptors = mutableListOf<RealtimeInterceptor>()
 
-    private var connectionConfig = ConnectionConfig.defaultWsConfig()
+    private var connectionConfig = ConnectionConfig.defaultMqttConfig()
 
     fun addMessageConverter(converter: MessageTypeConverter) {
       messageTypeConverter.add(converter)
