@@ -1,6 +1,5 @@
 package com.app.realtime.servicemodule
 
-import android.annotation.SuppressLint
 import com.app.core.ApiResult
 import com.app.realtime.config.ConnectionConfig
 import com.app.realtime.config.Qos
@@ -12,6 +11,7 @@ import com.app.realtime.service.PacketMapper
 import com.app.realtime.service.RealtimeService
 import com.hivemq.client.internal.util.InetSocketAddressUtil
 import com.hivemq.client.mqtt.MqttClient
+import com.hivemq.client.mqtt.MqttWebSocketConfig
 import com.hivemq.client.mqtt.datatypes.MqttQos
 import com.hivemq.client.mqtt.datatypes.MqttQos.EXACTLY_ONCE
 import com.hivemq.client.mqtt.datatypes.MqttTopic
@@ -40,19 +40,26 @@ class MqttService(
 ) : RealtimeService {
   private var client: Mqtt5Client? = null
 
-  @SuppressLint("CheckResult")
   override fun connect(config: ConnectionConfig) =
     callbackFlow {
       trySend(ApiResult.Loading)
       try {
         with(config) {
-          val mqttBuilder = MqttClient.builder()
+          var mqttBuilder = MqttClient.builder()
             .identifier(clientId)
             .serverAddress(InetSocketAddressUtil.create(host, port ?: 0))
+            .webSocketConfig(MqttWebSocketConfig.builder().subprotocol("mqtt").serverPath("/mqtt").build())
+            .addDisconnectedListener {
+              println("VIS LOG disconnected ${it.cause}")
+              trySend(ApiResult.Error(it.cause))
+            }
             .useMqttVersion5()
 
           interceptors.forEach {
-            mqttBuilder.advancedConfig().interceptors(adaptInterceptor(it))
+            mqttBuilder = mqttBuilder
+              .advancedConfig()
+              .interceptors(adaptInterceptor(it))
+              .applyAdvancedConfig()
           }
 
           val mqttClient = mqttBuilder.buildAsync()
@@ -106,13 +113,13 @@ class MqttService(
           val subscribeMessage = Mqtt5Subscribe.builder()
             .topicFilter(topic)
             .qos(qos.getQosCode())
-            .retainAsPublished(retained)
             .build()
 
           client?.toAsync()?.subscribe(subscribeMessage) { mqttMessage ->
             val realtimeMessage = toRealtimeMessage(mqttMessage)
             trySend(realtimeMessage)
           }?.whenComplete { subAck, error ->
+            println("VIS LOG suback ${subAck.reasonString}")
             interceptors.forEach { interceptor ->
               interceptor.onSubscribeAck(PacketMapper.onSubscribeAck(subAck))
             }

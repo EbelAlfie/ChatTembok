@@ -44,7 +44,7 @@ dependencies {
   implementation(platform(libs.okhttp3.okhttp.bom))
 
   implementation(libs.hivemq.mqtt.client)
-  //  implementation(libs.hivemq.mqtt.client.websocket)
+  implementation(platform(libs.hivemq.mqtt.client.websocket))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
