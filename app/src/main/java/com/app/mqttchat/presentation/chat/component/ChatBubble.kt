@@ -1,6 +1,7 @@
 package com.app.mqttchat.presentation.chat.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +12,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -27,18 +27,18 @@ fun ChatBubble(message: ChatMessageModel) {
   Box (modifier = Modifier.fillMaxWidth()) {
     Column(
       modifier = if (isMine) Modifier.align(Alignment.CenterEnd) else Modifier.align(Alignment.CenterStart),
+      verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
       Text(modifier = if (isMine) Modifier.align(Alignment.End) else Modifier.align(Alignment.Start), text = message.user.username)
       Card (
         modifier = Modifier
           .clip(CircleShape)
-          .background(if (isMine) Light_Blue else Color.Gray, CircleShape)
-          .padding(8.dp),
+          .background(if (isMine) Light_Blue else Color.LightGray, CircleShape),
         shape = CircleShape,
-        colors = CardDefaults.cardColors(containerColor = if (isMine) Light_Blue else Color.Gray),
+        colors = CardDefaults.cardColors(containerColor = if (isMine) Light_Blue else Color.LightGray),
         elevation = CardDefaults.elevatedCardElevation()
       ) {
-        Text(text = message.text)
+        Text(modifier = Modifier.padding(8.dp), text = message.text)
       }
     }
   }

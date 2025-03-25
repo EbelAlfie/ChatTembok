@@ -56,8 +56,8 @@ fun MessageComposer(
     value = textMessage,
     onValueChange = onValueChanged,
     colors = OutlinedTextFieldDefaults.colors(
-      focusedBorderColor = Color.Blue,
-      unfocusedBorderColor = Color.Blue
+      focusedBorderColor = Light_Blue,
+      unfocusedBorderColor = Light_Blue
     ),
     placeholder = { Text(text = stringResource(R.string.message_composer_hint)) },
     shape = RoundedCornerShape(20.dp)
