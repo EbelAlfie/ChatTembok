@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -12,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -59,19 +61,48 @@ fun ConnectionLoading(uiState: UiState<*>) {
         ) {
           when (uiState) {
             is UiState.Loading -> CircularProgressIndicator()
-            is UiState.Loaded -> Icon(
-              imageVector = Icons.Default.Check,
-              tint = Color.Green,
-              contentDescription = null
-            )
-
-            is UiState.Error -> Icon(
-              imageVector = Icons.Default.Close,
-              tint = Color.Red,
-              contentDescription = null
-            )
+            is UiState.Loaded -> Success()
+            is UiState.Error -> Error()
           }
         }
       }
     }
+}
+
+@Composable
+fun Success() {
+  Column(
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Icon(
+      modifier = Modifier.size(50.dp),
+      imageVector = Icons.Default.Check,
+      tint = Color.Green,
+      contentDescription = null
+    )
+    Text(
+      text = "Connected",
+      color = Color.Green
+    )
+  }
+}
+
+@Composable
+fun Error() {
+  Column(
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Icon(
+      modifier = Modifier.size(50.dp),
+      imageVector = Icons.Default.Close,
+      tint = Color.Red,
+      contentDescription = null
+    )
+    Text(
+      text = "Disconnected",
+      color = Color.Red
+    )
+  }
 }
