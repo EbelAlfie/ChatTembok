@@ -2,13 +2,13 @@ package com.app.realtime.servicemodule
 
 import android.annotation.SuppressLint
 import com.app.core.ApiResult
-import com.app.realtime.service.PacketMapper
 import com.app.realtime.config.ConnectionConfig
 import com.app.realtime.config.Qos
 import com.app.realtime.interceptor.RealtimeInterceptor
 import com.app.realtime.model.RealtimeMessage
 import com.app.realtime.model.SubscribeRequest
 import com.app.realtime.model.UninitializedClientException
+import com.app.realtime.service.PacketMapper
 import com.app.realtime.service.RealtimeService
 import com.hivemq.client.internal.util.InetSocketAddressUtil
 import com.hivemq.client.mqtt.MqttClient
@@ -52,8 +52,7 @@ class MqttService(
             .useMqttVersion5()
 
           interceptors.forEach {
-            val interceptor = adaptInterceptor(it)
-            mqttBuilder.advancedConfig().interceptors(interceptor)
+            mqttBuilder.advancedConfig().interceptors(adaptInterceptor(it))
           }
 
           val mqttClient = mqttBuilder.buildAsync()

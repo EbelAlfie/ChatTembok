@@ -13,25 +13,28 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class RealtimeClient internal constructor(
-  private val mqttServiceClient: RealtimeService
+  private val connectionConfig: ConnectionConfig,
+  private val service: RealtimeService
 ) {
   private val converter: MessageTypeConverter = GsonConverter()
 
-  fun connectUser() = mqttServiceClient.connect(ConnectionConfig.defaultMqttConfig())
+  fun connectUser(config: ConnectionConfig?) = service.connect(config ?: connectionConfig)
 
   fun <msgType> publishMessage(request: PublishRequest<msgType>, type: Class<msgType>) {
     val realtimeMessage = converter.toMessage(message = request, classType = type)
-    mqttServiceClient.publish(realtimeMessage)
+    service.publish(realtimeMessage)
   }
 
   fun <msgType> subscribeMessage(request: SubscribeRequest, type: Class<msgType>): Flow<msgType> {
-    return mqttServiceClient.subscribe(request)
+    return service.subscribe(request)
       .map { converter.fromMessage(it, type) }
   }
 
   class Builder {
     private val messageTypeConverter = mutableListOf<MessageTypeConverter>()
     private val interceptors = mutableListOf<RealtimeInterceptor>()
+
+    private var connectionConfig = ConnectionConfig.defaultWsConfig()
 
     fun addMessageConverter(converter: MessageTypeConverter) {
       messageTypeConverter.add(converter)
@@ -41,9 +44,13 @@ class RealtimeClient internal constructor(
       interceptors.add(interceptor)
     }
 
+    fun setConnectionConfig(newConfig: ConnectionConfig) {
+      connectionConfig = newConfig
+    }
+
     fun build() = buildAsMqtt()
 
-    private fun buildAsWs() = RealtimeClient(WsService())
-    private fun buildAsMqtt() = RealtimeClient(MqttService(interceptors))
+    private fun buildAsWs() = RealtimeClient(connectionConfig, WsService())
+    private fun buildAsMqtt() = RealtimeClient(connectionConfig, MqttService(interceptors))
   }
 }

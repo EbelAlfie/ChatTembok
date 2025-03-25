@@ -1,6 +1,7 @@
 package com.app.mqttchat.di
 
 import com.app.realtime.RealtimeClient
+import com.app.realtime.config.ConnectionConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

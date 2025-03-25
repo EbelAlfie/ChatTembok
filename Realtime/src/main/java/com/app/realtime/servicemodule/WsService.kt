@@ -21,7 +21,7 @@ import java.nio.ByteBuffer
 import java.util.UUID
 import java.util.concurrent.TimeUnit.SECONDS
 
-class WsService: RealtimeService {
+class WsService(): RealtimeService {
   private var client: WebSocket? = null
   private val sessionId: String = UUID.randomUUID().toString()
   private val _messageEvent = MutableSharedFlow<RealtimeMessage>(replay = 1)
@@ -46,6 +46,7 @@ class WsService: RealtimeService {
             override fun onOpen(webSocket: WebSocket, response: Response) {
               super.onOpen(webSocket, response)
               println("VIS LOG on open ${response.message}")
+              trySend(ApiResult.Success(true))
             }
             override fun onMessage(webSocket: WebSocket, text: String) {
               super.onMessage(webSocket, text)
@@ -74,6 +75,7 @@ class WsService: RealtimeService {
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
               super.onFailure(webSocket, t, response)
               println("VIS LOG on failure ${t.cause}")
+              trySend(ApiResult.Error(t))
             }
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
