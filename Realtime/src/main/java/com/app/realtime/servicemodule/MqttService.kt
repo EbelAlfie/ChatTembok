@@ -31,9 +31,11 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.pubrel.Mqtt5PubRel
 import com.hivemq.client.mqtt.mqtt5.message.publish.pubrel.Mqtt5PubRelBuilder
 import com.hivemq.client.mqtt.mqtt5.message.subscribe.Mqtt5Subscribe
 import com.hivemq.client.mqtt.mqtt5.message.unsubscribe.Mqtt5Unsubscribe
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 import kotlin.jvm.optionals.getOrNull
 
 class MqttService(
@@ -42,7 +44,7 @@ class MqttService(
   private var client: Mqtt5Client? = null
 
   override fun connect(config: ConnectionConfig) =
-    callbackFlow {
+    callbackFlow({
       trySend(ApiResult.Loading)
       try {
         with(config) {
@@ -86,7 +88,7 @@ class MqttService(
       } finally {
         awaitClose { }
       }
-    }
+    }).flowOn(Dispatchers.Main)
 
   override fun publish(message: RealtimeMessage) {
     try {
@@ -100,7 +102,7 @@ class MqttService(
           .payload(this.message)
           .build()
 
-        client?.toAsync()?.publish(publishMessage)
+        client?.toBlocking()?.publish(publishMessage)
       }
     } catch (e: Throwable) {
       println("VIS LOG ERROR PUBLISH $e")
@@ -122,11 +124,11 @@ class MqttService(
             val realtimeMessage = toRealtimeMessage(mqttMessage)
             trySend(realtimeMessage)
           }?.whenComplete { subAck, error ->
-            println("VIS LOG suback ${subAck.reasonString}")
-            interceptors.forEach { interceptor ->
-              interceptor.onSubscribeAck(PacketMapper.onSubscribeAck(subAck))
+              println("VIS LOG suback ${subAck.reasonString}")
+              interceptors.forEach { interceptor ->
+                interceptor.onSubscribeAck(PacketMapper.onSubscribeAck(subAck))
+              }
             }
-          }
         } catch (ex: Throwable) {
           ex.printStackTrace()
           println("VIS LOG ERRROR $ex")
@@ -134,7 +136,7 @@ class MqttService(
           awaitClose { }
         }
       }
-    }
+    }.flowOn(Dispatchers.Main)
   }
 
   override fun unsubscribe() {

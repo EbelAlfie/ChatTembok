@@ -12,15 +12,15 @@ data class ConnectionConfig internal constructor(
 
   companion object {
     fun defaultMqttConfig() = ConnectionConfig(
-      host = "10.4.77.103",
-      port = 1883, //8083,
-      scheme = "tcp" //"ws"
+      host = "192.168.231.13",
+      port = 8083, //8083,
+      scheme = "ws" //"ws"
     )
     
     fun defaultWsConfig() = ConnectionConfig(
-      host = "gtw32lpt-8003.asse.devtunnels.ms",
-      port = null,
-      scheme = "wss"
+      host = "192.168.231.13",
+      port = 8003,
+      scheme = "ws"
     )
   }
 }

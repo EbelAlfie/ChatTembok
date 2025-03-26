@@ -4,12 +4,10 @@ import android.content.Context
 import com.app.chuckerrealtime.activity.NotifManager
 import com.app.chuckerrealtime.data.InterceptorRepository
 import com.app.chuckerrealtime.data.model.MessageEntity
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.collectLatest
-import javax.inject.Inject
 
-class EventCollector @Inject constructor(
-  @ApplicationContext private val context: Context,
+class EventCollector(
+  private val context: Context,
   private val repository: InterceptorRepository
 ) {
 

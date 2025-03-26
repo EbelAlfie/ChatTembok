@@ -1,5 +1,9 @@
 package com.app.chuckerrealtime
 
+import android.content.Context
+import com.app.chuckerrealtime.data.InterceptorRepositoryImpl
+import com.app.chuckerrealtime.data.service.InterceptorService
+import com.app.chuckerrealtime.di.RoomModule
 import com.app.realtime.interceptor.RealtimeInterceptor
 import com.app.realtime.model.mqtt.Connect
 import com.app.realtime.model.mqtt.ConnectAck
@@ -11,12 +15,12 @@ import com.app.realtime.model.mqtt.PublishRel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class MqttInterceptor: RealtimeInterceptor {
+class MqttInterceptor(context: Context): RealtimeInterceptor {
+  private val localInterceptService: InterceptorService = RoomModule().provideDatabase(context).interceptorService()
+  private val repository = InterceptorRepositoryImpl(localInterceptService)
 
-  @Inject
-  lateinit var eventCollector: EventCollector
+  private val eventCollector: EventCollector = EventCollector(context, repository)
 
   init { setupSubscriber() }
 
