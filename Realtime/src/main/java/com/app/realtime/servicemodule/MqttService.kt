@@ -1,6 +1,7 @@
 package com.app.realtime.servicemodule
 
 import com.app.core.ApiResult
+import com.app.realtime.Utils.isWebSocketScheme
 import com.app.realtime.config.ConnectionConfig
 import com.app.realtime.config.Qos
 import com.app.realtime.interceptor.RealtimeInterceptor
@@ -46,14 +47,16 @@ class MqttService(
       try {
         with(config) {
           var mqttBuilder = MqttClient.builder()
+            .useMqttVersion5()
             .identifier(clientId)
             .serverAddress(InetSocketAddressUtil.create(host, port ?: 0))
-            .webSocketConfig(MqttWebSocketConfig.builder().subprotocol("mqtt").serverPath("/mqtt").build())
             .addDisconnectedListener {
               println("VIS LOG disconnected ${it.cause}")
               trySend(ApiResult.Error(it.cause))
             }
-            .useMqttVersion5()
+
+          if (isWebSocketScheme(scheme))
+            mqttBuilder = mqttBuilder.webSocketConfig(MqttWebSocketConfig.builder().subprotocol("mqtt").serverPath("/mqtt").build())
 
           interceptors.forEach {
             mqttBuilder = mqttBuilder

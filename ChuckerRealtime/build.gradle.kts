@@ -2,9 +2,10 @@ plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.compose.compiler)
-  id("com.google.devtools.ksp")
+//  id("com.google.devtools.ksp")
   id("com.google.dagger.hilt.android")
   id("kotlin-parcelize")
+  id("kotlin-kapt")
 }
 
 android {
@@ -47,7 +48,7 @@ dependencies {
   implementation(libs.androidx.room.ktx)
 
   implementation(libs.dagger.hilt)
-  ksp(libs.dagger.hilt.compiler)
+  kapt(libs.dagger.hilt.compiler)
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

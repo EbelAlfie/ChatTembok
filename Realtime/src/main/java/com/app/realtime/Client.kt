@@ -36,16 +36,19 @@ class RealtimeClient internal constructor(
 
     private var connectionConfig = ConnectionConfig.defaultMqttConfig()
 
-    fun addMessageConverter(converter: MessageTypeConverter) {
+    fun addMessageConverter(converter: MessageTypeConverter): Builder {
       messageTypeConverter.add(converter)
+      return this
     }
 
-    fun addMqttInterceptor(interceptor: RealtimeInterceptor) {
+    fun addMqttInterceptor(interceptor: RealtimeInterceptor): Builder {
       interceptors.add(interceptor)
+      return this
     }
 
-    fun setConnectionConfig(newConfig: ConnectionConfig) {
+    fun setConnectionConfig(newConfig: ConnectionConfig): Builder {
       connectionConfig = newConfig
+      return this
     }
 
     fun build() = buildAsMqtt()

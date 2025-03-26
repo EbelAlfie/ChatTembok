@@ -24,7 +24,7 @@ class ChatRepositoryImpl @Inject constructor(
 
   override fun observeMessage(chatRoomId: String): Flow<ApiResult<ChatMessageModel>> {
     return realtimeApiClient
-      .subscribeMessage(SubscribeRequest.defaultSubRequest("chat/${chatRoomId}/send"), RealtimeMessageEvent::class.java)
+      .subscribeMessage(SubscribeRequest.defaultSubRequest("chat/${chatRoomId}/events"), RealtimeMessageEvent::class.java)
       .catch { ApiResult.Error(it) }
       .map { ApiResult.Success(RealtimeMessageEvent.transform(it)) }
   }
