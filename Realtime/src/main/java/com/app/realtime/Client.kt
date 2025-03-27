@@ -34,7 +34,7 @@ class RealtimeClient internal constructor(
     private val messageTypeConverter = mutableListOf<MessageTypeConverter>()
     private val interceptors = mutableListOf<RealtimeInterceptor>()
 
-    private var connectionConfig = ConnectionConfig.defaultWsConfig()
+    private var connectionConfig = ConnectionConfig.defaultMqttConfig()
 
     fun addMessageConverter(converter: MessageTypeConverter): Builder {
       messageTypeConverter.add(converter)
@@ -51,9 +51,10 @@ class RealtimeClient internal constructor(
       return this
     }
 
-    fun build() = buildAsWs()
+//    fun build() = buildAsWs()
 
-    private fun buildAsWs() = RealtimeClient(connectionConfig, WsService())
-    private fun buildAsMqtt() = RealtimeClient(connectionConfig, MqttService(interceptors))
+    fun buildAsWs() = RealtimeClient(connectionConfig, WsService())
+
+    fun buildAsMqtt() = RealtimeClient(connectionConfig, MqttService(interceptors))
   }
 }

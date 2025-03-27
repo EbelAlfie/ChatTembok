@@ -1,0 +1,3 @@
+[submodule "ChuckerRealtime"]
+	path = ChuckerRealtime
+	url = https://github.com/EbelAlfie/RealtimeChucker.git

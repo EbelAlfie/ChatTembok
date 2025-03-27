@@ -1,6 +1,7 @@
 package com.app.mqttchat.di
 
 import com.app.realtime.RealtimeClient
+import com.app.realtime.config.ConnectionConfig
 import com.app.realtime.interceptor.RealtimeInterceptor
 import com.app.realtime.model.mqtt.Connect
 import com.app.realtime.model.mqtt.ConnectAck
@@ -59,6 +60,7 @@ class RealtimeModule {
     return RealtimeClient
       .Builder()
       .addMqttInterceptor(basicInterceptor)
-      .build()
+      .setConnectionConfig(ConnectionConfig.defaultMqttConfig())
+      .buildAsMqtt()
   }
 }

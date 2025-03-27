@@ -31,11 +31,11 @@ import com.hivemq.client.mqtt.mqtt5.message.publish.pubrel.Mqtt5PubRel
 import com.hivemq.client.mqtt.mqtt5.message.publish.pubrel.Mqtt5PubRelBuilder
 import com.hivemq.client.mqtt.mqtt5.message.subscribe.Mqtt5Subscribe
 import com.hivemq.client.mqtt.mqtt5.message.unsubscribe.Mqtt5Unsubscribe
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flowOn
+import java.util.concurrent.Executors
+import java.util.concurrent.ThreadFactory
 import kotlin.jvm.optionals.getOrNull
 
 class MqttService(
@@ -44,7 +44,7 @@ class MqttService(
   private var client: Mqtt5Client? = null
 
   override fun connect(config: ConnectionConfig) =
-    callbackFlow({
+    callbackFlow {
       trySend(ApiResult.Loading)
       try {
         with(config) {
@@ -88,7 +88,7 @@ class MqttService(
       } finally {
         awaitClose { }
       }
-    }).flowOn(Dispatchers.Main)
+    }
 
   override fun publish(message: RealtimeMessage) {
     try {
@@ -120,10 +120,14 @@ class MqttService(
             .qos(qos.getQosCode())
             .build()
 
-          client?.toAsync()?.subscribe(subscribeMessage) { mqttMessage ->
+          client?.toAsync()?.subscribe(subscribeMessage, { mqttMessage ->
             val realtimeMessage = toRealtimeMessage(mqttMessage)
             trySend(realtimeMessage)
-          }?.whenComplete { subAck, error ->
+          }, Executors.newSingleThreadExecutor(object: ThreadFactory {
+            override fun newThread(r: Runnable?): Thread {
+              return Thread(r, "HIVE MQ Subscribe")
+            }
+          })) ?.whenComplete { subAck, error ->
               println("VIS LOG suback ${subAck.reasonString}")
               interceptors.forEach { interceptor ->
                 interceptor.onSubscribeAck(PacketMapper.onSubscribeAck(subAck))
@@ -136,7 +140,7 @@ class MqttService(
           awaitClose { }
         }
       }
-    }.flowOn(Dispatchers.Main)
+    }
   }
 
   override fun unsubscribe() {

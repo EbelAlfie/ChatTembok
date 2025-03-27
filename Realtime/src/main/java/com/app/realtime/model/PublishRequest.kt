@@ -13,7 +13,7 @@ data class PublishRequest<messageType>(
       PublishRequest(
         topic = topic,
         message = message,
-        qos = Qos.AT_MOST_ONCE
+        qos = Qos.EXACTLY_ONCE
       )
   }
 }
