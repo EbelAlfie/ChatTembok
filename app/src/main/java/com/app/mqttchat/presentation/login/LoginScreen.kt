@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import com.app.mqttchat.domain.model.UserModel
 import com.app.mqttchat.presentation.common.UiState
 import com.app.mqttchat.presentation.common.UiState.Loaded
 import com.app.mqttchat.presentation.login.component.AppTitle
+import com.app.mqttchat.presentation.login.component.Selection
 import com.app.mqttchat.presentation.navigation.ScreenRoutes
 import com.app.mqttchat.presentation.ui.component.GeneralButton
 import com.app.mqttchat.presentation.ui.component.TextInput
@@ -50,6 +52,14 @@ fun LoginScreen(
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
       AppTitle()
+
+      Selection(
+        networkState = uiState.network,
+        host = uiState.host,
+        onSelected = viewModel::onNetworkChanged,
+        onHostUpdated = viewModel::onHostUpdated
+      )
+
       Spacer(modifier = Modifier.height(40.dp))
       TextInput(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp),

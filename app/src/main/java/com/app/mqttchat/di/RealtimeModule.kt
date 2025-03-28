@@ -1,5 +1,8 @@
 package com.app.mqttchat.di
 
+import com.app.mqttchat.App
+import com.app.mqttchat.App.Companion
+import com.app.mqttchat.presentation.login.component.Network
 import com.app.realtime.RealtimeClient
 import com.app.realtime.config.ConnectionConfig
 import com.app.realtime.interceptor.RealtimeInterceptor
@@ -23,6 +26,7 @@ class RealtimeModule {
   @Provides
   @Singleton
   fun provideRealtimeClient(): RealtimeClient {
+    val user = App.getUser()
     val basicInterceptor = object: RealtimeInterceptor {
       override fun onConnect(connect: Connect) {
       }
@@ -57,10 +61,17 @@ class RealtimeModule {
       override fun onPublishComp(publishComp: PublishComp) {
       }
     }
-    return RealtimeClient
+    val builder = RealtimeClient
       .Builder()
       .addMqttInterceptor(basicInterceptor)
       .setConnectionConfig(ConnectionConfig.defaultMqttConfig())
-      .buildAsMqtt()
+
+    val network = user?.network ?: Network.MQTT
+
+    return when (network) {
+      Network.MQTT_WS,
+      Network.MQTT -> builder.buildAsMqtt()
+      else -> builder.buildAsWs()
+    }
   }
 }

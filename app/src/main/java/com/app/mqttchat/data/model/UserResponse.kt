@@ -17,7 +17,7 @@ data class UserResponse(
     fun transform(response: UserResponse?): UserModel {
       return UserModel(
         id = response?.id ?: "",
-        username = response?.username ?: ""
+        username = response?.username ?: "",
       )
     }
 

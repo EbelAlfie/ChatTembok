@@ -3,8 +3,10 @@ package com.app.mqttchat.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.core.ApiResult
+import com.app.mqttchat.domain.model.UserModel
 import com.app.mqttchat.domain.usecase.ApplicationUseCase
 import com.app.mqttchat.presentation.common.UiState
+import com.app.mqttchat.presentation.login.component.Network
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,9 +22,9 @@ class HomeViewModel @Inject constructor(
   private val _connectionStatus = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
   val connectionStatus = _connectionStatus.asStateFlow()
 
-  fun establishRealtimeConnection() {
+  fun establishRealtimeConnection(user: UserModel) {
     viewModelScope.launch {
-      applicationUseCase.establishMqttConnection().collectLatest { state ->
+      applicationUseCase.establishMqttConnection(user).collectLatest { state ->
         println("VIS LOG connection result $state")
         _connectionStatus.update {
           when (state) {

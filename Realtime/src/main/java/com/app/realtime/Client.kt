@@ -51,10 +51,8 @@ class RealtimeClient internal constructor(
       return this
     }
 
-//    fun build() = buildAsWs()
+    fun buildAsMqtt() = RealtimeClient(connectionConfig, MqttService(interceptors))
 
     fun buildAsWs() = RealtimeClient(connectionConfig, WsService())
-
-    fun buildAsMqtt() = RealtimeClient(connectionConfig, MqttService(interceptors))
   }
 }
