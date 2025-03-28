@@ -38,6 +38,8 @@ class ChatViewModel @AssistedInject constructor(
         text = message
       )
       chatUseCase.sendMessage(roomId, messageRequest)
+
+      _chatState.update { it + messageRequest } //TODO optimize
     }
   }
 
