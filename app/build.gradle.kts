@@ -47,6 +47,7 @@ android {
 
 dependencies {
   implementation(project(":Realtime"))
+  implementation(project(":chat"))
 //  implementation(project(":ChuckerRealtime"))
 
   implementation(platform(libs.androidx.compose.bom))

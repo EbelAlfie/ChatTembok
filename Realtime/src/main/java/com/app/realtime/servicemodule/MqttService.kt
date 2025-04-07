@@ -10,12 +10,14 @@ import com.app.realtime.model.SubscribeRequest
 import com.app.realtime.model.UninitializedClientException
 import com.app.realtime.service.PacketMapper
 import com.app.realtime.service.RealtimeService
+import com.hivemq.client.internal.mqtt.lifecycle.MqttClientAutoReconnectImpl
 import com.hivemq.client.internal.util.InetSocketAddressUtil
 import com.hivemq.client.mqtt.MqttClient
 import com.hivemq.client.mqtt.MqttWebSocketConfig
 import com.hivemq.client.mqtt.datatypes.MqttQos
 import com.hivemq.client.mqtt.datatypes.MqttQos.EXACTLY_ONCE
 import com.hivemq.client.mqtt.datatypes.MqttTopic
+import com.hivemq.client.mqtt.lifecycle.MqttClientAutoReconnect
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
 import com.hivemq.client.mqtt.mqtt5.Mqtt5ClientConfig
 import com.hivemq.client.mqtt.mqtt5.advanced.interceptor.Mqtt5ClientInterceptors
@@ -36,6 +38,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
+import java.util.concurrent.TimeUnit
 import kotlin.jvm.optionals.getOrNull
 
 class MqttService(
@@ -56,6 +59,12 @@ class MqttService(
               println("VIS LOG disconnected ${it.cause}")
               trySend(ApiResult.Error(it.cause))
             }
+            .automaticReconnect(
+              MqttClientAutoReconnect.builder()
+                .initialDelay(500, TimeUnit.MILLISECONDS)
+                .maxDelay(3, TimeUnit.MINUTES)
+                .build()
+            )
 
           if (isWebSocketScheme(scheme))
             mqttBuilder = mqttBuilder.webSocketConfig(MqttWebSocketConfig.builder().subprotocol("mqtt").serverPath("/mqtt").build())
