@@ -17,7 +17,7 @@ class ChatRepositoryImpl @Inject constructor(
 ) : ChatRepository {
   override fun sendMessage(chatRoomId: String, message: RealtimeMessageEvent) {
     realtimeApiClient.publishMessage(
-      PublishRequest.defaultPubRequest("chat/${chatRoomId}/send", message),
+      PublishRequest.defaultPubRequest("chat/${chatRoomId}/events", message),
       RealtimeMessageEvent::class.java
     )
   }

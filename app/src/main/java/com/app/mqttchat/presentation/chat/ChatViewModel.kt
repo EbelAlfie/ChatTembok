@@ -38,8 +38,7 @@ class ChatViewModel @AssistedInject constructor(
         text = message
       )
       chatUseCase.sendMessage(roomId, messageRequest)
-
-      _chatState.update { it + messageRequest } //TODO optimize
+//      _chatState.update { it + messageRequest } //TODO optimize
     }
   }
 
@@ -50,7 +49,7 @@ class ChatViewModel @AssistedInject constructor(
           when (newEvent) {
             is ApiResult.Loading -> it
             is ApiResult.Error -> it + ChatMessageModel(user = UserModel(username = "System"), text = newEvent.cause.message.toString())
-            is ApiResult.Success -> (it + newEvent.data).distinctBy { message -> message.id }
+            is ApiResult.Success -> it + newEvent.data /*).distinctBy { message -> message.id } */
           }
         }
       }

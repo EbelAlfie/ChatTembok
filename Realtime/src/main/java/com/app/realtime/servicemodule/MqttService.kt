@@ -16,6 +16,7 @@ import com.hivemq.client.mqtt.MqttWebSocketConfig
 import com.hivemq.client.mqtt.datatypes.MqttQos
 import com.hivemq.client.mqtt.datatypes.MqttQos.EXACTLY_ONCE
 import com.hivemq.client.mqtt.datatypes.MqttTopic
+import com.hivemq.client.mqtt.datatypes.MqttUtf8String
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
 import com.hivemq.client.mqtt.mqtt5.Mqtt5ClientConfig
 import com.hivemq.client.mqtt.mqtt5.advanced.interceptor.Mqtt5ClientInterceptors
@@ -56,6 +57,7 @@ class MqttService(
               println("VIS LOG disconnected ${it.cause}")
               trySend(ApiResult.Error(it.cause))
             }
+            .automaticReconnectWithDefaultConfig()
 
           if (isWebSocketScheme(scheme))
             mqttBuilder = mqttBuilder.webSocketConfig(MqttWebSocketConfig.builder().subprotocol("mqtt").serverPath("/mqtt").build())
@@ -121,13 +123,12 @@ class MqttService(
             .build()
 
           client?.toAsync()?.subscribe(subscribeMessage, { mqttMessage ->
+            println("VIS LOG sdfsdf ${mqttMessage}")
+            println("VIS LOG sdfsdf asdasd ${mqttMessage.contentType}")
             val realtimeMessage = toRealtimeMessage(mqttMessage)
             trySend(realtimeMessage)
-          }, Executors.newSingleThreadExecutor(object: ThreadFactory {
-            override fun newThread(r: Runnable?): Thread {
-              return Thread(r, "HIVE MQ Subscribe")
-            }
-          })) ?.whenComplete { subAck, error ->
+          }, Executors.newCachedThreadPool { r -> Thread(r, "HIVE MQ Subscribe") })
+            ?.whenComplete { subAck, error ->
               println("VIS LOG suback ${subAck.reasonString}")
               interceptors.forEach { interceptor ->
                 interceptor.onSubscribeAck(PacketMapper.onSubscribeAck(subAck))

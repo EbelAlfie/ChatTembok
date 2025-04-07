@@ -22,6 +22,6 @@ fun MessageList(
     modifier = modifier.padding(horizontal = 8.dp),
     verticalArrangement = Arrangement.spacedBy(10.dp),
   ) {
-    items(messageList, key = { it.id }) { ChatBubble(it) }
+    items(messageList, /*key = { it.id }*/) { ChatBubble(it) }
   }
 }
