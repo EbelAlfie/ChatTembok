@@ -33,11 +33,14 @@ android {
 }
 
 dependencies {
+  implementation(project(":Realtime"))
 //  implementation(platform(libs.androidx.compose.bom))
 //  implementation(libs.androidx.material3)
 
   implementation(libs.androidx.room.runtime)
   implementation(libs.androidx.room.ktx)
+
+  implementation(libs.gson)
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

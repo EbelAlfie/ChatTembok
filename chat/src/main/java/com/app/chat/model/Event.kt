@@ -1,5 +1,9 @@
 package com.app.chat.model
 
-sealed class ChatEvent {
-  abstract val type: String
+import com.google.gson.annotations.SerializedName
+
+data class ChatEvent(
+  @SerializedName("type")
+  val type: String
+) {
 }
