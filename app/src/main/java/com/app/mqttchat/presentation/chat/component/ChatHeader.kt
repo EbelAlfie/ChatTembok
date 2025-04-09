@@ -1,6 +1,5 @@
 package com.app.mqttchat.presentation.chat.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -36,8 +34,8 @@ fun ChatHeader(
       Column(
         verticalArrangement = Arrangement.spacedBy(2.dp)
       ) {
-        Text(text = "Liz")
-        Text(text = "is Typing")
+        Text(text = "Siapalah")
+        Text(text = "Online")
       }
     }
   }

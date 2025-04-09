@@ -1,0 +1,4 @@
+[submodule "ChuckerRealtime"]
+	path = RealtimeChucker
+	url = https://github.com/EbelAlfie/RealtimeChucker.git
+	branch = master

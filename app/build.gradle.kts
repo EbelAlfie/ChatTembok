@@ -47,6 +47,8 @@ android {
 
 dependencies {
   implementation(project(":Realtime"))
+  implementation(project(":chat"))
+//  implementation(project(":ChuckerRealtime"))
 
   implementation(platform(libs.androidx.compose.bom))
   implementation(libs.androidx.material3)
@@ -54,8 +56,8 @@ dependencies {
   implementation(libs.androidx.navigation.compose)
   implementation(libs.androidx.hilt.navigation.compose)
 
-  implementation(libs.dagger.hilt)
   implementation(project(":core"))
+  implementation(libs.dagger.hilt)
   kapt(libs.dagger.hilt.compiler)
 
   implementation(libs.gson)

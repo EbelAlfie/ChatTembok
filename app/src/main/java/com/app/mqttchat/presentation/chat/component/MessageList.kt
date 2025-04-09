@@ -1,6 +1,7 @@
 package com.app.mqttchat.presentation.chat.component
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -18,9 +19,9 @@ fun MessageList(
 ) {
   val messageList by messages.collectAsStateWithLifecycle()
   LazyColumn(
-    modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(10.dp)
+    modifier = modifier.padding(horizontal = 8.dp),
+    verticalArrangement = Arrangement.spacedBy(10.dp),
   ) {
-    items(messageList) { ChatBubble(it) }
+    items(messageList, key = { it.id }) { ChatBubble(it) }
   }
 }

@@ -33,11 +33,18 @@ android {
 }
 
 dependencies {
-  implementation(libs.hivemq.mqtt.client)
-  implementation(libs.dagger.hilt)
   implementation(project(":core"))
+
+  implementation(libs.dagger.hilt)
   kapt(libs.dagger.hilt.compiler)
+
   implementation(libs.gson)
+
+  implementation(libs.okhttp)
+  implementation(platform(libs.okhttp3.okhttp.bom))
+
+  implementation(libs.hivemq.mqtt.client)
+  implementation(platform(libs.hivemq.mqtt.client.websocket))
 
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)

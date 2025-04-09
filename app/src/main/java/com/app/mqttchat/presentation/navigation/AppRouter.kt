@@ -1,10 +1,12 @@
 package com.app.mqttchat.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.core.os.BundleCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.app.mqttchat.domain.model.UserModel
 import com.app.mqttchat.presentation.chat.ChatRoomScreen
 import com.app.mqttchat.presentation.home.HomeScreen
 import com.app.mqttchat.presentation.login.LoginScreen
@@ -30,7 +32,8 @@ fun AppRouter(
       route = HomeRoute.route,
       arguments = HomeRoute.navArguments
     ) {
-      HomeScreen(navController = navController)
+      val user = it.arguments?.let { bundle -> BundleCompat.getParcelable(bundle,"user", UserModel::class.java) }
+      HomeScreen(navController = navController, user = user)
     }
 
     composable(

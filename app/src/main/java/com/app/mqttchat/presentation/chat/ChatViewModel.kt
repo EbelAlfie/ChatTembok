@@ -2,8 +2,10 @@ package com.app.mqttchat.presentation.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.core.ApiResult
 import com.app.mqttchat.App
 import com.app.mqttchat.domain.model.ChatMessageModel
+import com.app.mqttchat.domain.model.UserModel
 import com.app.mqttchat.domain.usecase.ChatUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -21,7 +23,7 @@ class ChatViewModel @AssistedInject constructor(
   @Assisted private val roomId: String,
   private val chatUseCase: ChatUseCase
 ): ViewModel() {
-  private val _chatState = MutableStateFlow<MutableList<ChatMessageModel>>(mutableListOf())
+  private val _chatState = MutableStateFlow<List<ChatMessageModel>>(emptyList())
   val chatState: StateFlow<List<ChatMessageModel>> = _chatState
 
   fun loadMessages() {
@@ -29,18 +31,28 @@ class ChatViewModel @AssistedInject constructor(
   }
 
   fun sendMessage(message: String) {
-    val user = App.getUser() ?: return
-    val messageRequest = ChatMessageModel(
-      user = user,
-      text = message
-    )
-    chatUseCase.sendMessage(roomId, messageRequest)
+    viewModelScope.launch {
+      val user = App.getUser() ?: return@launch
+      val messageRequest = ChatMessageModel(
+        user = user,
+        text = message
+      )
+      chatUseCase.sendMessage(roomId, messageRequest)
+
+      _chatState.update { it + messageRequest } //TODO optimize
+    }
   }
 
   fun observeMessages() {
     viewModelScope.launch {
-      chatUseCase.observeMessage(roomId).collectLatest { newMessage ->
-        _chatState.update { it.apply { add(newMessage) } }
+      chatUseCase.observeMessage(roomId).collectLatest { newEvent ->
+        _chatState.update {
+          when (newEvent) {
+            is ApiResult.Loading -> it
+            is ApiResult.Error -> it + ChatMessageModel(user = UserModel(username = "System"), text = newEvent.cause.message.toString())
+            is ApiResult.Success -> (it + newEvent.data).distinctBy { message -> message.id }
+          }
+        }
       }
     }
   }
