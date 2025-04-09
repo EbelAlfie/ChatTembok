@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ApplicationUseCase {
   fun establishMqttConnection(user: UserModel): Flow<ApiResult<Boolean>>
+  fun setUser(user: UserModel)
+  fun getCurrentUser(): UserModel?
 }

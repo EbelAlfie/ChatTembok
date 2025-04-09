@@ -3,6 +3,7 @@ package com.app.mqttchat.presentation.login
 import androidx.lifecycle.ViewModel
 import com.app.mqttchat.App
 import com.app.mqttchat.domain.model.UserModel
+import com.app.mqttchat.domain.usecase.ApplicationUseCase
 import com.app.mqttchat.presentation.common.UiState
 import com.app.mqttchat.presentation.login.component.Network
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +13,9 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(): ViewModel() {
+class LoginViewModel @Inject constructor(
+  private val appUseCase: ApplicationUseCase
+): ViewModel() {
   private val _loginState = MutableStateFlow(LoginUiState())
   val loginState = _loginState.asStateFlow()
 
@@ -55,7 +58,7 @@ class LoginViewModel @Inject constructor(): ViewModel() {
       host = userData.host
     )
 
-    App.setUser(user)
+    appUseCase.setUser(user)
 
     _apiState.value = UiState.Loaded(user)
   }

@@ -9,4 +9,5 @@ interface ChatRepository {
   fun sendMessage(chatRoomId: String, message: MessageResponse)
 
   fun observeMessage(chatRoomId: String): Flow<ApiResult<ChatMessageModel>>
+  fun sendOnlineEvent()
 }

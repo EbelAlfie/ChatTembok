@@ -15,6 +15,11 @@ import javax.inject.Inject
 class ChatRepositoryImpl @Inject constructor(
   private val realtimeApiClient: RealtimeClient
 ) : ChatRepository {
+
+  override fun sendOnlineEvent() {
+
+  }
+
   override fun sendMessage(chatRoomId: String, message: MessageResponse) {
     realtimeApiClient.publishMessage(
       PublishRequest.defaultPubRequest("chat/${chatRoomId}/send", message),

@@ -3,9 +3,9 @@ package com.app.mqttchat.presentation.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.core.ApiResult
-import com.app.mqttchat.App
 import com.app.mqttchat.domain.model.ChatMessageModel
 import com.app.mqttchat.domain.model.UserModel
+import com.app.mqttchat.domain.usecase.ApplicationUseCase
 import com.app.mqttchat.domain.usecase.ChatUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -17,12 +17,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
 @HiltViewModel(assistedFactory = ChatViewModel.Companion.ChatViewModelFactory::class)
 class ChatViewModel @AssistedInject constructor(
   @Assisted private val roomId: String,
+  private val appUseCase: ApplicationUseCase,
   private val chatUseCase: ChatUseCase
 ): ViewModel() {
+
+  val currentUser = appUseCase.getCurrentUser()
+
   private val _chatState = MutableStateFlow<List<ChatMessageModel>>(emptyList())
   val chatState: StateFlow<List<ChatMessageModel>> = _chatState
 
@@ -32,7 +35,7 @@ class ChatViewModel @AssistedInject constructor(
 
   fun sendMessage(message: String) {
     viewModelScope.launch {
-      val user = App.getUser() ?: return@launch
+      val user = appUseCase.getCurrentUser() ?: return@launch
       val messageRequest = ChatMessageModel(
         user = user,
         text = message

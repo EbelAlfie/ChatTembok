@@ -3,6 +3,7 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="11">
       <module name="MqttChat.ChuckerRealtime" target="21" />
+      <module name="MqttChat.data" target="21" />
       <module name="MqttChat.Login" target="21" />
       <module name="MqttChat.login" target="21" />
     </bytecodeTargetLevel>

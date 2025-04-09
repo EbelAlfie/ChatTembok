@@ -30,6 +30,10 @@ class RealtimeClient internal constructor(
       .map { converter.fromMessage(it, type) }
   }
 
+  fun addListener(topic: String) {
+
+  }
+
   class Builder {
     private val messageTypeConverter = mutableListOf<MessageTypeConverter>()
     private val interceptors = mutableListOf<RealtimeInterceptor>()

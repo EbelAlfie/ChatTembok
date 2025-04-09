@@ -22,9 +22,7 @@ import com.app.mqttchat.domain.model.ChatMessageModel
 import com.app.mqttchat.presentation.ui.theme.Light_Blue
 
 @Composable
-fun ChatBubble(message: ChatMessageModel) {
-  val isMine = isMine(message)
-
+fun ChatBubble(message: ChatMessageModel, isMine: Boolean) {
   Box (modifier = Modifier.fillMaxWidth()) {
     Column(
       modifier = if (isMine) Modifier.align(Alignment.CenterEnd) else Modifier.align(Alignment.CenterStart),
@@ -45,9 +43,4 @@ fun ChatBubble(message: ChatMessageModel) {
       }
     }
   }
-}
-
-fun isMine(message: ChatMessageModel): Boolean {
-  val sender = message.user
-  return sender.id == App.getUser()?.id
 }
